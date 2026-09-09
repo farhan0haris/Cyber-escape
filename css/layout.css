@@ -1,0 +1,578 @@
+/* Layout Styles — Screen views, Game Shell, HUD, Viewport, Sector Track, Command Log, Responsive Adaptations */
+
+/* Screens Container */
+.screen-view {
+  display: none;
+  width: 100%;
+  flex: 1;
+  flex-direction: column;
+}
+
+.screen-view.active {
+  display: flex;
+}
+
+/* Home / Main Menu View */
+#screen-main-menu {
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg) var(--space-md);
+  position: relative;
+}
+
+.menu-layout-wrapper {
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.menu-card {
+  width: 100%;
+  padding: var(--space-xl) var(--space-xl);
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.menu-header-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.menu-security-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-xs);
+}
+
+.tag-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--warning);
+  box-shadow: 0 0 6px var(--warning-glow);
+  animation: pulse-dot 1.8s infinite;
+}
+
+.menu-glitch-title {
+  font-family: var(--font-mono);
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.title-glow {
+  text-shadow: 0 0 16px var(--accent-primary-glow);
+}
+
+.menu-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.2em;
+  color: var(--accent-primary);
+  text-transform: uppercase;
+}
+
+/* Terminal Command Log Panel */
+.terminal-log-panel {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  text-align: left;
+}
+
+.terminal-log-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: rgba(10, 14, 20, 0.7);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+.terminal-header-badge {
+  font-size: 0.625rem;
+  background: rgba(0, 229, 153, 0.1);
+  border: 1px solid rgba(0, 229, 153, 0.3);
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+}
+
+.terminal-log-body {
+  padding: 10px 14px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 110px;
+  overflow-y: auto;
+}
+
+.log-line {
+  opacity: 0.85;
+}
+
+.log-cursor-line {
+  opacity: 1;
+}
+
+.terminal-cursor {
+  display: inline-block;
+  color: var(--accent-primary);
+  animation: blink-cursor 1s infinite steps(1);
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Sector Track Map Preview */
+.sector-track-panel {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  text-align: left;
+}
+
+.sector-track-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.sector-track-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.sector-node {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.sector-node.active {
+  border-color: var(--accent-primary);
+  background: rgba(0, 210, 255, 0.06);
+}
+
+.sector-node .sector-num {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+}
+
+.sector-node .sector-name {
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sector-node .sector-type {
+  font-size: 0.5625rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Menu Actions Navigation */
+.menu-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.menu-actions .btn-primary {
+  width: 100%;
+}
+
+.menu-secondary-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+/* Game Shell View */
+#screen-game-shell {
+  flex: 1;
+  display: none;
+  flex-direction: column;
+  max-width: 1040px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-md);
+}
+
+#screen-game-shell.active {
+  display: flex;
+}
+
+/* HUD (Heads-Up Display) */
+.hud-wrapper {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 20px;
+  margin-bottom: var(--space-md);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hud-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.hud-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+}
+
+.hud-pill-label {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.hud-pill-val {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* Lives Node Icons */
+.hud-lives-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.life-node {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-xs);
+  background-color: var(--accent-secondary);
+  box-shadow: 0 0 8px var(--accent-secondary-glow);
+  transition: all var(--transition-fast);
+}
+
+.life-node.depleted {
+  background-color: var(--border);
+  box-shadow: none;
+  opacity: 0.35;
+}
+
+/* Timer Warning / Critical states */
+.hud-timer-val {
+  font-family: var(--font-mono);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+}
+
+.hud-timer-val.warning {
+  color: var(--warning);
+  animation: pulse-timer 1.2s infinite ease-in-out;
+}
+
+.hud-timer-val.danger {
+  color: var(--danger);
+  animation: pulse-timer 0.6s infinite ease-in-out;
+}
+
+@keyframes pulse-timer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.hud-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  border-top: 1px solid var(--border-muted);
+  padding-top: 8px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hud-objective-text {
+  color: var(--text-secondary);
+}
+
+.hud-objective-text span {
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.hud-meta-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.hud-status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent-secondary);
+  font-size: 0.6875rem;
+}
+
+/* Game Viewport Container */
+.game-viewport-container {
+  flex: 1;
+  min-height: 480px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.viewport-stage-container {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Viewport Standby Radar Atmosphere */
+.viewport-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-xl);
+  max-width: 540px;
+  position: relative;
+  z-index: 2;
+}
+
+.viewport-radar-ring {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(0, 210, 255, 0.3);
+  margin-bottom: var(--space-md);
+  position: relative;
+  box-shadow: inset 0 0 16px rgba(0, 210, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.radar-sweep {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-full);
+  background: conic-gradient(from 0deg, transparent 60%, rgba(0, 210, 255, 0.35) 100%);
+  animation: rotate-sweep 3.5s infinite linear;
+}
+
+.radar-crosshair {
+  width: 100%;
+  height: 1px;
+  background: rgba(0, 210, 255, 0.2);
+  position: relative;
+}
+
+.radar-crosshair::after {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  width: 1px;
+  height: 80px;
+  background: rgba(0, 210, 255, 0.2);
+}
+
+@keyframes rotate-sweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.viewport-placeholder-title {
+  font-family: var(--font-mono);
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.viewport-placeholder-desc {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: var(--space-md);
+}
+
+.viewport-telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.telemetry-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  padding: 6px 8px;
+  border-radius: var(--radius-xs);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.telemetry-card .card-label {
+  font-size: 0.625rem;
+  color: var(--text-muted);
+}
+
+.telemetry-card .card-val {
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+  .menu-glitch-title {
+    font-size: 2.25rem;
+  }
+
+  .sector-track-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .sector-node:nth-child(4),
+  .sector-node:nth-child(5) {
+    grid-column: span 1;
+  }
+
+  .hud-top-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .hud-controls {
+    grid-column: span 2;
+    justify-content: space-between;
+  }
+
+  .menu-secondary-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .game-viewport-container {
+    min-height: 400px;
+  }
+
+  .system-rail {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 8px 14px;
+  }
+
+  .system-telemetry-cluster {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-card {
+    padding: var(--space-md) var(--space-sm);
+  }
+
+  .menu-glitch-title {
+    font-size: 1.85rem;
+  }
+
+  .sector-track-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hud-top-row {
+    grid-template-columns: 1fr;
+  }
+
+  .hud-controls {
+    grid-column: span 1;
+  }
+
+  .viewport-telemetry-grid {
+    grid-template-columns: 1fr;
+  }
+}

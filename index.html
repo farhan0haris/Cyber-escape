@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cyber Escape — A browser-based virtual cybersecurity escape room puzzle and adventure game.">
+  <title>Cyber Escape // Virtual Security Protocol</title>
+
+  <!-- Google Fonts Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/level1.css">
+  <link rel="stylesheet" href="css/level2.css">
+</head>
+<body>
+  <!-- Layered Cyber Atmosphere Layers -->
+  <div class="bg-grid-layer" aria-hidden="true"></div>
+  <div class="bg-vignette-layer" aria-hidden="true"></div>
+  <div class="bg-scanline-layer" aria-hidden="true"></div>
+  <div class="bg-particles-layer" aria-hidden="true"></div>
+
+  <!-- Main Application Wrapper -->
+  <div id="app">
+    <!-- Top System Diagnostic Rail -->
+    <header class="system-rail" role="banner">
+      <div class="system-status-badge">
+        <span class="status-dot" id="system-status-dot"></span>
+        <span id="system-status-text">SYSTEM CORE: ONLINE</span>
+      </div>
+      <div class="system-telemetry-cluster" aria-label="System Telemetry">
+        <span class="telemetry-item"><span class="text-muted">HOST:</span> SEC-MAINFRAME</span>
+        <span class="telemetry-separator">|</span>
+        <span class="telemetry-item"><span class="text-muted">LINK:</span> <span class="text-emerald">ENCRYPTED (AES-256)</span></span>
+        <span class="telemetry-separator">|</span>
+        <span class="telemetry-item"><span class="text-muted">THREAT:</span> <span class="text-amber">DEFENSIVE LOCKOUT</span></span>
+      </div>
+      <div class="system-audio-toggle">
+        <button id="btn-audio-toggle" class="btn btn-sm btn-secondary" aria-label="Toggle Audio" type="button">
+          AUDIO: <span id="audio-status-label" class="text-muted">OFF</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Global Toast Notifications Container -->
+    <div id="toast-container" class="notification-container" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- MAIN VIEW: HOME / MAIN MENU -->
+    <main id="screen-main-menu" class="screen-view active" role="main">
+      <section class="menu-layout-wrapper">
+        <!-- Main Card -->
+        <div class="menu-card cyber-panel cyber-corner-brackets" aria-labelledby="menu-title">
+          <!-- Main Header -->
+          <div class="menu-header-block">
+            <div class="menu-security-tag font-mono">
+              <span class="tag-pulse"></span> SYSTEM INTRUSION // CONTAINMENT SANDBOX
+            </div>
+            <h1 id="menu-title" class="menu-glitch-title">
+              <span class="title-glow">CYBER</span>
+              <span class="text-cyan title-glow">ESCAPE</span>
+            </h1>
+            <p class="menu-subtitle">BREAK THE SYSTEM. FIND THE EXIT.</p>
+          </div>
+
+          <!-- Environmental Command Log -->
+          <div class="terminal-log-panel" aria-label="Virtual System Command Feed">
+            <div class="terminal-log-header">
+              <span class="terminal-header-title font-mono">&gt; ROOT CONSOLE FEED</span>
+              <span class="terminal-header-badge font-mono text-emerald">LIVE TELEMETRY</span>
+            </div>
+            <div class="terminal-log-body font-mono" id="terminal-command-log">
+              <div class="log-line">&gt; [SYS_INIT] Initializing containment sandbox kernel...</div>
+              <div class="log-line">&gt; [AUTH] Security watchdog engaged on subroutines 01–05.</div>
+              <div class="log-line">&gt; [STATUS] 5-layer encrypted security perimeter active.</div>
+              <div class="log-line log-cursor-line">&gt; <span class="text-cyan">Awaiting operator credentials to execute escape protocol...</span><span class="terminal-cursor">_</span></div>
+            </div>
+          </div>
+
+          <!-- Sector Preview Track (5 Sectors Map) -->
+          <div class="sector-track-panel" aria-label="Virtual System Sectors">
+            <div class="sector-track-label font-mono">
+              <span>SYSTEM SECTORS TO OVERRIDE:</span>
+              <span class="text-cyan">5 PHASES</span>
+            </div>
+            <div class="sector-track-grid">
+              <div class="sector-node active" title="Sector 1: Password Breach">
+                <span class="sector-num font-mono">01</span>
+                <div class="sector-info">
+                  <span class="sector-name">FIREWALL GATE</span>
+                  <span class="sector-type">LOGIC HASH</span>
+                </div>
+              </div>
+              <div class="sector-node" title="Sector 2: Digital Labyrinth">
+                <span class="sector-num font-mono">02</span>
+                <div class="sector-info">
+                  <span class="sector-name">DIGITAL LABYRINTH</span>
+                  <span class="sector-type">GRID ROUTING</span>
+                </div>
+              </div>
+              <div class="sector-node" title="Sector 3: Memory Dump">
+                <span class="sector-num font-mono">03</span>
+                <div class="sector-info">
+                  <span class="sector-name">MEMORY DUMP</span>
+                  <span class="sector-type">DECOY FILTER</span>
+                </div>
+              </div>
+              <div class="sector-node" title="Sector 4: Packet Corridor">
+                <span class="sector-num font-mono">04</span>
+                <div class="sector-info">
+                  <span class="sector-name">PACKET CORRIDOR</span>
+                  <span class="sector-type">LASER EVASION</span>
+                </div>
+              </div>
+              <div class="sector-node" title="Sector 5: Root Kernel">
+                <span class="sector-num font-mono">05</span>
+                <div class="sector-info">
+                  <span class="sector-name">ROOT KERNEL</span>
+                  <span class="sector-type">MASTER OVERRIDE</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Menu Actions -->
+          <nav class="menu-actions" aria-label="Main Navigation">
+            <button id="btn-start-setup" class="btn btn-primary btn-large" type="button">
+              <span class="btn-text">INITIALIZE RUN</span>
+              <span class="btn-subtext font-mono">[AUTHENTICATE AGENT]</span>
+            </button>
+            <div class="menu-secondary-actions">
+              <button id="btn-open-how-to-play" class="btn btn-secondary" type="button">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                HOW TO PLAY
+              </button>
+              <button id="btn-open-leaderboard" class="btn btn-secondary" type="button">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                  <path d="M4 22h16"></path>
+                  <path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-2.34"></path>
+                  <path d="M14 14.66V17c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-2.34"></path>
+                  <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                </svg>
+                LEADERBOARD
+              </button>
+              <button id="btn-open-about" class="btn btn-secondary" type="button">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                ABOUT
+              </button>
+            </div>
+          </nav>
+        </div>
+      </section>
+    </main>
+
+    <!-- GAME SHELL VIEW: HUD + VIEWPORT -->
+    <section id="screen-game-shell" class="screen-view" aria-label="Active Game Environment">
+      <!-- Heads-Up Display (HUD) -->
+      <header class="hud-wrapper cyber-panel" role="region" aria-label="Game Heads-Up Display">
+        <div class="hud-top-row">
+          <!-- Level Badge -->
+          <div class="hud-pill" id="hud-level-pill">
+            <span class="hud-pill-label">SECTOR:</span>
+            <span class="hud-pill-val text-cyan" id="hud-level-val">01 / 05</span>
+          </div>
+
+          <!-- Player Identity -->
+          <div class="hud-pill" id="hud-player-pill">
+            <span class="hud-pill-label">AGENT:</span>
+            <span class="hud-pill-val" id="hud-player-val">OPERATOR</span>
+          </div>
+
+          <!-- Lives Node Indicators -->
+          <div class="hud-pill" id="hud-lives-pill" aria-label="Integrity Lives">
+            <span class="hud-pill-label">INTEGRITY:</span>
+            <div class="hud-lives-container" id="hud-lives-container">
+              <span class="life-node" title="Integrity Node 1"></span>
+              <span class="life-node" title="Integrity Node 2"></span>
+              <span class="life-node" title="Integrity Node 3"></span>
+            </div>
+          </div>
+
+          <!-- Countdown Timer -->
+          <div class="hud-pill" id="hud-timer-pill">
+            <span class="hud-pill-label">LOCKOUT:</span>
+            <span class="hud-timer-val" id="hud-timer-val">01:15</span>
+          </div>
+
+          <!-- Score Counter -->
+          <div class="hud-pill" id="hud-score-pill">
+            <span class="hud-pill-label">SCORE:</span>
+            <span class="hud-pill-val text-cyan" id="hud-score-val">00000</span>
+          </div>
+
+          <!-- Controls -->
+          <div class="hud-controls">
+            <button id="btn-pause-game" class="btn btn-sm btn-secondary" type="button" aria-label="Pause Game">PAUSE [P]</button>
+            <button id="btn-restart-game" class="btn btn-sm btn-danger" type="button" aria-label="Restart Mission">RESTART</button>
+          </div>
+        </div>
+
+        <!-- HUD Objective Row -->
+        <div class="hud-bottom-row">
+          <div class="hud-objective-text">
+            <span class="text-cyan">ACTIVE SECTOR:</span>
+            <span id="hud-objective-val">AWAITING MISSION INITIALIZATION...</span>
+          </div>
+          <div class="hud-meta-group font-mono">
+            <span class="hud-status-indicator"><span class="status-dot"></span> CONNECTED</span>
+            <span class="text-muted" id="hud-total-time-val">ELAPSED: 00:00</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Game Viewport (Container for Level Canvases & DOM stages) -->
+      <main class="game-viewport-container cyber-corner-brackets" id="game-viewport" role="main" aria-label="Game Stage Viewport">
+        <div class="viewport-stage-container" id="viewport-stage">
+          <!-- Phase 2 Polish Viewport Placeholder -->
+          <div class="viewport-placeholder">
+            <div class="viewport-radar-ring" aria-hidden="true">
+              <div class="radar-sweep"></div>
+              <div class="radar-crosshair"></div>
+            </div>
+            <h2 class="viewport-placeholder-title">SECTOR INITIALIZATION // SYSTEM STANDBY</h2>
+            <p class="viewport-placeholder-desc">
+              Core architecture, delta-time execution engines, and audio synthesizers are verified. Sector 01 (Password Breach) will activate in Phase 4.
+            </p>
+            <div class="viewport-telemetry-grid font-mono">
+              <div class="telemetry-card">
+                <span class="card-label">SECTOR INTEGRITY</span>
+                <span class="card-val text-emerald">NOMINAL (100%)</span>
+              </div>
+              <div class="telemetry-card">
+                <span class="card-label">SECURITY PROTOCOL</span>
+                <span class="card-val text-cyan">ACTIVE DEFENSE</span>
+              </div>
+              <div class="telemetry-card">
+                <span class="card-label">LATENCY</span>
+                <span class="card-val text-emerald">0.4 MS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </section>
+
+    <!-- MODAL 1: PLAYER SETUP (OPERATOR IDENTIFICATION) -->
+    <div id="modal-player-setup" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="setup-modal-title">
+      <div class="modal-content cyber-corner-brackets">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <span class="modal-badge font-mono text-cyan">PROTOCOL AUTHENTICATION</span>
+            <h2 id="setup-modal-title" class="modal-title">OPERATOR IDENTIFICATION</h2>
+          </div>
+          <button class="modal-close-btn" data-close-modal type="button" aria-label="Close modal">&times;</button>
+        </div>
+        <form id="form-player-setup" novalidate>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="player-name-input" class="form-label">OPERATOR CODENAME</label>
+              <input
+                type="text"
+                id="player-name-input"
+                class="form-input"
+                placeholder="e.g. Cypher 01"
+                maxlength="20"
+                autocomplete="off"
+                required
+                aria-describedby="player-name-error"
+              >
+              <div id="player-name-error" class="form-error-msg" role="alert"></div>
+            </div>
+            <div class="auth-notice-card font-mono">
+              <p><span class="text-cyan">&gt; POLICY:</span> 2 to 20 characters allowed.</p>
+              <p><span class="text-muted">&gt; ACCEPTED:</span> English letters, numbers, spaces, underscores, and hyphens.</p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-close-modal>CANCEL</button>
+            <button type="submit" class="btn btn-primary" id="btn-confirm-start">PROCEED TO SYSTEM</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL 2: HOW TO PLAY -->
+    <div id="modal-how-to-play" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="how-to-play-title">
+      <div class="modal-content cyber-corner-brackets" style="max-width: 640px;">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <span class="modal-badge font-mono text-cyan">SECURITY PROTOCOL</span>
+            <h2 id="how-to-play-title" class="modal-title">MISSION BRIEFING & RULES</h2>
+          </div>
+          <button class="modal-close-btn" data-close-modal type="button" aria-label="Close modal">&times;</button>
+        </div>
+        <div class="modal-body briefing-grid">
+          <section class="briefing-card">
+            <h3 class="briefing-card-title text-cyan font-mono">&gt; OBJECTIVE</h3>
+            <p>You are trapped inside a locked computer system. Successfully clear 5 consecutive security sectors before the lockout countdown reaches zero to initiate emergency disconnect.</p>
+          </section>
+
+          <section class="briefing-card">
+            <h3 class="briefing-card-title text-cyan font-mono">&gt; FIVE SECTOR PROGRESSION</h3>
+            <div class="briefing-sectors-list font-mono">
+              <div class="briefing-sector-item">
+                <span class="item-num text-cyan">01</span>
+                <span><strong>Firewall Gate:</strong> Deduce the root password hash from forensic clues.</span>
+              </div>
+              <div class="briefing-sector-item">
+                <span class="item-num text-cyan">02</span>
+                <span><strong>Digital Labyrinth:</strong> Navigate 2D memory grid channels to reach the gateway.</span>
+              </div>
+              <div class="briefing-sector-item">
+                <span class="item-num text-cyan">03</span>
+                <span><strong>Memory Dump:</strong> Inspect 12 cryptographic chips and filter out false decoys.</span>
+              </div>
+              <div class="briefing-sector-item">
+                <span class="item-num text-cyan">04</span>
+                <span><strong>Packet Corridor:</strong> Evade sweeping firewall laser barriers in real time.</span>
+              </div>
+              <div class="briefing-sector-item">
+                <span class="item-num text-cyan">05</span>
+                <span><strong>Root Kernel:</strong> Recall sequence patterns, balance frequencies, and execute override.</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="briefing-card">
+            <h3 class="briefing-card-title text-emerald font-mono">&gt; SCORING & BONUSES</h3>
+            <p>Earn base points per completed sector plus a time bonus for each second remaining. Clamped to a minimum of 0 points.</p>
+          </section>
+
+          <section class="briefing-card">
+            <h3 class="briefing-card-title text-amber font-mono">&gt; INTEGRITY LIVES & TIMEOUT</h3>
+            <p>Start with <strong>3 Integrity Nodes</strong>. Collisions with hazards or timer expiration deduct 1 node and reset the active sector. Reaching 0 nodes triggers total Lockdown (Game Over).</p>
+          </section>
+
+          <section class="briefing-card">
+            <h3 class="briefing-card-title text-cyan font-mono">&gt; CONTROLS</h3>
+            <p class="font-mono" style="font-size: 0.8125rem;">
+              <strong>[P] / [Escape]:</strong> Pause Game &bull; 
+              <strong>[WASD] / [Arrows]:</strong> Sector Navigation &bull; 
+              <strong>[Mouse / Tap]:</strong> Terminals & Puzzles
+            </p>
+          </section>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-close-modal>ACKNOWLEDGED</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 3: LEADERBOARD PLACEHOLDER -->
+    <div id="modal-leaderboard" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="leaderboard-title">
+      <div class="modal-content cyber-corner-brackets" style="max-width: 580px;">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <span class="modal-badge font-mono text-cyan">TOP AGENT ARCHIVES</span>
+            <h2 id="leaderboard-title" class="modal-title">ESCAPE LEADERBOARD</h2>
+          </div>
+          <button class="modal-close-btn" data-close-modal type="button" aria-label="Close modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="leaderboard-shell-container">
+            <div class="leaderboard-header-row font-mono">
+              <span>RANK</span>
+              <span>AGENT CODENAME</span>
+              <span>SCORE</span>
+              <span>TIME</span>
+            </div>
+            <!-- Empty State Shell -->
+            <div class="leaderboard-empty-state">
+              <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                <path d="M6 8h.01"></path>
+                <path d="M10 8h.01"></path>
+                <path d="M14 8h.01"></path>
+                <path d="M18 8h.01"></path>
+                <path d="M8 12h8"></path>
+                <path d="M8 16h5"></path>
+              </svg>
+              <h3 class="empty-title font-mono">NO ESCAPE RECORDS ESTABLISHED</h3>
+              <p class="empty-desc">
+                Complete an unbroken 5-sector override run to register your final score, time, and integrity rating in the archives.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>DISMISS</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 4: ABOUT -->
+    <div id="modal-about" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="about-title">
+      <div class="modal-content cyber-corner-brackets">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <span class="modal-badge font-mono text-cyan">SYSTEM SPECIFICATIONS</span>
+            <h2 id="about-title" class="modal-title">PROJECT SPECIFICATIONS</h2>
+          </div>
+          <button class="modal-close-btn" data-close-modal type="button" aria-label="Close modal">&times;</button>
+        </div>
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
+          <div class="about-field">
+            <span class="field-label font-mono text-muted">PROJECT TITLE</span>
+            <p class="font-mono text-cyan" style="font-weight: 700; font-size: 1.125rem;">Cyber Escape</p>
+          </div>
+          <div class="about-field">
+            <span class="field-label font-mono text-muted">PROJECT TYPE</span>
+            <p>College Mini-Project // Interactive Cybersecurity Browser Escape Room</p>
+          </div>
+          <div class="about-field">
+            <span class="field-label font-mono text-muted">APPROVED TECHNOLOGY STACK</span>
+            <p class="font-mono" style="font-size: 0.875rem;">HTML5 &bull; CSS3 (Vanilla Tokens) &bull; JavaScript (ES6 Modules) &bull; LocalStorage &bull; Web Audio API</p>
+          </div>
+          <div class="about-field">
+            <span class="field-label font-mono text-muted">ARCHITECTURAL CONSTRAINTS</span>
+            <p style="font-size: 0.875rem;">
+              Built completely without runtime frameworks or build bundlers. Features hardware-accelerated animations, delta-time execution loops, and accessible dialogs.
+            </p>
+          </div>
+          <div class="about-field">
+            <span class="field-label font-mono text-muted">ENGINEERING CREDITS</span>
+            <p class="font-mono text-emerald" style="font-size: 0.875rem;">[Student / Engineering Development Team]</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>CLOSE</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 5: PAUSE OVERLAY -->
+    <div id="modal-pause" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="pause-title">
+      <div class="modal-content cyber-corner-brackets" style="max-width: 440px; text-align: center;">
+        <div class="modal-header" style="justify-content: center;">
+          <h2 id="pause-title" class="modal-title text-amber">SYSTEM PAUSED</h2>
+        </div>
+        <div class="modal-body">
+          <p style="margin-bottom: 20px;">Execution suspended. Countdown timers and security hazard loops are frozen.</p>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button id="btn-resume-game" class="btn btn-primary" type="button">RESUME EXECUTION</button>
+            <button id="btn-pause-restart" class="btn btn-danger" type="button">RESTART MISSION</button>
+            <button id="btn-quit-menu" class="btn btn-secondary" type="button">QUIT TO MAIN MENU</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 6: GAME OVER OVERLAY -->
+    <div id="modal-game-over" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="game-over-title">
+      <div class="modal-content cyber-corner-brackets" style="max-width: 460px; text-align: center; border-top-color: var(--danger);">
+        <div class="modal-header" style="justify-content: center; flex-direction: column; gap: 4px;">
+          <span class="modal-badge font-mono text-red">CRITICAL SYSTEM FAILURE</span>
+          <h2 id="game-over-title" class="modal-title text-red" style="font-size: 1.35rem;">LOCKDOWN ENGAGED</h2>
+        </div>
+        <div class="modal-body">
+          <div class="game-over-cause-badge font-mono text-amber" id="game-over-cause" style="margin-bottom: 16px; font-size: 0.875rem;">
+            INTEGRITY EXHAUSTED
+          </div>
+          <div class="game-over-stats-grid font-mono" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px;">
+            <div class="telemetry-card">
+              <span class="card-label">FINAL SCORE</span>
+              <span class="card-val text-cyan" id="game-over-score">00000</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="card-label">PROGRESS</span>
+              <span class="card-val text-emerald" id="game-over-sectors">0 / 5</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="card-label">TOTAL TIME</span>
+              <span class="card-val text-amber" id="game-over-time">00:00</span>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button id="btn-game-over-restart" class="btn btn-primary" type="button">RETRY MISSION</button>
+            <button id="btn-game-over-menu" class="btn btn-secondary" type="button">RETURN TO MAIN MENU</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main ES6 Module Entry Point -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

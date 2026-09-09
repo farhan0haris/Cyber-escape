@@ -1,0 +1,94 @@
+/* Base Document Styling & Layered Atmosphere */
+body {
+  font-family: var(--font-ui);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* Layer 0 & 1: Digital Grid & Ambient Vignette */
+.bg-grid-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(to right, rgba(34, 53, 74, 0.22) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(34, 53, 74, 0.22) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.bg-vignette-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(circle at center, transparent 40%, rgba(6, 9, 13, 0.92) 100%);
+}
+
+/* Layer 2: Subtle Scanline Horizon */
+.bg-scanline-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.18),
+    rgba(0, 0, 0, 0.18) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  opacity: 0.35;
+}
+
+/* Layer 3: Subtle Slow Animated Horizon Particle/Pulse Layer */
+.bg-particles-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(circle at 50% 20%, rgba(0, 210, 255, 0.05), transparent 70%);
+  animation: ambient-pulse 8s infinite alternate ease-in-out;
+}
+
+@keyframes ambient-pulse {
+  0% { opacity: 0.3; transform: scale(1); }
+  100% { opacity: 0.7; transform: scale(1.05); }
+}
+
+/* App Container */
+#app {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Accessibility: Focus Styles */
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .bg-scanline-layer,
+  .bg-particles-layer {
+    display: none;
+  }
+}
