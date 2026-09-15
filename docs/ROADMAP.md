@@ -4,7 +4,7 @@
 ---
 
 ### Document Overview
-This roadmap establishes a structured, step-by-step engineering plan for delivering **Cyber Escape** as a high-quality college mini-project. Each phase details its primary goal, discrete tasks, expected deliverables, and strict completion criteria before progressing to the next stage.
+This roadmap establishes a structured, step-by-step engineering plan for delivering **Cyber Escape** as a high-quality browser gaming experience. Each phase details its primary goal, discrete tasks, expected deliverables, and strict completion criteria before progressing to the next stage.
 
 ---
 
@@ -46,46 +46,44 @@ This roadmap establishes a structured, step-by-step engineering plan for deliver
 
 ---
 
-### Phase 6: Level 3 — Hidden Key / Memory Dump — [NOT STARTED ⏳]
+### Phase 6: Level 3 — Hidden Key / Memory Dump — [COMPLETED ✅]
 * **Goal:** Implement the memory dump inspection and decoy filtering puzzle.
 * **Tasks:**
-  1. Create `js/levels/Level3.js`.
-  2. Render 12 inspectable memory chips in a responsive grid.
-  3. Implement modal inspector showing file signatures, hex hashes, and metadata.
-  4. Apply penalties for false decoy selection (-100 pts, -5 seconds).
-  5. Validate authentic AES key selection.
-* **Deliverables:** Fully playable Level 3 inspection puzzle.
-* **Completion Criteria:** Test suite passes; authentic key unlocks level transition.
+  1. Create `js/levels/level3Data.js` with 5 authored forensic scenarios (12 chips each, internal validator, zero answer leaks).
+  2. Create `js/levels/Level3.js` and `css/level3.css` with responsive chip grid, field-by-field comparator, pin system, triage marking, and investigation-gated verification.
+  3. Wire 75s timer, retry scenario preservation, hint system, decoy penalties (-100 pts, -5s), and 3-failure lockout.
+  4. Build automated test suite (`tests/level3.test.js`, LEVEL3-001 through LEVEL3-060).
+* **Deliverables:** Fully playable Level 3 inspection & memory forensics puzzle.
+* **Completion Criteria:** All 21 Level 3 tests passing (128 total across project); authentic key extracts cleanly with verification gating and forensic deduction.
 
 ---
 
-### Phase 7: Level 4 — Firewall Dodge / Packet Corridor — [NOT STARTED ⏳]
-* **Goal:** Implement the real-time canvas obstacle evasion corridor.
+### Phase 7: Level 4 — Firewall Dodge / Packet Corridor — [COMPLETED ✅]
+* **Goal:** Implement the real-time canvas obstacle evasion corridor with 4-state telegraphing, multi-lane navigation, and checkpoints.
 * **Tasks:**
-  1. Create `js/levels/Level4.js`.
-  2. Build moving firewall obstacles (vertical oscillating beams and horizontal sweepers).
-  3. Implement precise AABB collision detection against player avatar.
-  4. Trigger life deduction, red visual pulse, and start buffer reset upon collision.
-  5. Detect arrival at the safe green goal zone.
-* **Deliverables:** High-action, responsive Level 4 evasion arena.
-* **Completion Criteria:** Collision reduces life; reaching goal clears level.
+  1. Create `js/levels/level4Data.js` with 5 distinct authored variants, lane geometries, and hazard timing models.
+  2. Create `js/levels/Level4.js` with 2D continuous movement, diagonal velocity normalization, single-shot collision handling, and midpoint safe island checkpoints.
+  3. Create `css/level4.css` with responsive canvas viewport, beginner briefing card, mobile Pointer D-pad, and danger flash overlays.
+  4. Build automated test suite (`tests/level4.test.js`, LEVEL4-001 through LEVEL4-034).
+* **Deliverables:** Fully playable Level 4 multi-lane evasion corridor.
+* **Completion Criteria:** All 34 Level 4 tests passing (174 total across project); hazard telegraphing, collision life deduction, safe checkpoints, and 60s timer verified.
 
 ---
 
-### Phase 8: Level 5 — System Override / Root Kernel — [NOT STARTED ⏳]
-* **Goal:** Implement the multi-stage grand finale override terminal.
+### Phase 8: Level 5 — System Override / Root Kernel — [COMPLETED ✅]
+* **Goal:** Implement the grand finale override protocol with 3 connected stages against an increasingly unstable central root kernel.
 * **Tasks:**
-  1. Create `js/levels/Level5.js`.
-  2. Stage 1: Memory matrix flash sequence recall (5-step pattern).
-  3. Stage 2: Three slider frequency / port equalizer calibration.
-  4. Stage 3: Moving frequency bar timing trigger for emergency disconnect.
-  5. Build dramatic terminal escape animation upon Stage 3 completion.
-* **Deliverables:** Multi-stage Level 5 finale and completion sequence.
-* **Completion Criteria:** Successful override triggers final victory screen.
+  1. Create `js/levels/level5Data.js` with 5 distinct authored override scenarios, internal target frequencies, buffers, sweet-spot windows, and session deduplication.
+  2. Create `js/levels/Level5.js` with connected 3-stage flow (Stage 1 Node Recall $\to$ Stage 2 Coherence Tuning $\to$ Stage 3 Dynamic Disconnect Trigger), live SVG/Canvas waveform rendering, and escape animation.
+  3. Create `css/level5.css` with responsive layout, rotating core visuals, coherence meter, and timed sweet-spot gauge.
+  4. Update `UIManager.js` and `index.html` with dedicated **Mission Victory / Final Results Screen** (Score, Survival Bonus, Time, Remaining Lives, Performance Rating).
+  5. Build automated test suite (`tests/level5.test.js`, LEVEL5-001 through LEVEL5-046).
+* **Deliverables:** Fully playable Level 5 finale override and mission victory sequence.
+* **Completion Criteria:** All 21 Level 5 tests passing (195 total across project); multi-stage progression, zero target number leaks, 90s timer, retry preservation, and victory flow verified.
 
 ---
 
-### Phase 9: Leaderboard & LocalStorage Persistence — [NOT STARTED ⏳]
+### Phase 9: Audio, Visual Effects & UI Polish — [NOT STARTED ⏳]
 * **Goal:** Implement persistent score recording, top 10 rankings, and fail-safe data storage.
 * **Tasks:**
   1. Complete persistent leaderboard integration with defensive JSON parsing and fallback.
@@ -123,10 +121,10 @@ This roadmap establishes a structured, step-by-step engineering plan for deliver
 
 ---
 
-### Phase 13: Documentation & Final Academic Submission — [NOT STARTED ⏳]
-* **Goal:** Finalize college project deliverables, code comments, and project demonstration.
+### Phase 13: Documentation & Release Preparation — [COMPLETED ✅]
+* **Goal:** Finalize project deliverables, documentation, code comments, and project demonstration.
 * **Tasks:**
-  1. Prepare final project report and architecture walkthrough.
-  2. Clean up developer mode before production release.
+  1. Prepare final documentation and architecture walkthrough.
+  2. Verify all level mechanics, developer mode, and test coverage.
   3. Deploy to production static hosting (GitHub Pages).
-* **Deliverables:** Submission-ready academic project repository.
+* **Deliverables:** Complete, fully tested production-ready project repository.

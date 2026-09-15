@@ -4,11 +4,15 @@
  */
 
 import { GameManager } from './core/GameManager.js';
+import { gameState } from './core/state.js';
 import { ui } from './ui/UIManager.js';
 import { input } from './systems/InputManager.js';
 import { audio } from './systems/AudioManager.js';
 import { storage } from './systems/StorageManager.js';
 import { DEV_CONFIG } from './core/devConfig.js';
+import { crtBackground } from './effects/crt/CrtBackground.js';
+import { CRT_SCREENS } from './effects/crt/crtScreens.js';
+import { swarmBackground } from './effects/swarm/SwarmBackground.js';
 
 class App {
   constructor() {
@@ -16,6 +20,11 @@ class App {
   }
 
   init() {
+    // 0. Mount WebGL Ambient Backgrounds (Layer 0: CRT Glass, Layer 0.5: Cyber Swarm)
+    crtBackground.mount();
+    swarmBackground.mount();
+    this._syncBackgroundsWithGameState();
+
     // 1. Initialize input bindings
     input.initialize();
 
@@ -48,6 +57,52 @@ class App {
     }
 
     console.log('[CyberEscape] Phase 3 Core Game Engine & HUD Integration initialized.');
+  }
+
+  /**
+   * Synchronize CRT variant and particle swarm opacity with game status and active level
+   */
+  _syncBackgroundsWithGameState() {
+    gameState.subscribe((state) => {
+      // 1. Sync CRT Screen Variant & Opacity
+      if (crtBackground) {
+        if (state.status === 'MENU') {
+          crtBackground.setVariant(CRT_SCREENS.TERMINAL);
+          crtBackground.setOpacity(0.24); // Atmospheric cyberpunk CRT terminal framing the menu
+        } else if (state.status === 'GAME_OVER') {
+          crtBackground.setVariant(CRT_SCREENS.BLUE_SCREEN);
+          crtBackground.setOpacity(0.50);
+        } else if (state.status === 'COMPLETED') {
+          crtBackground.setVariant(CRT_SCREENS.NINTENDO);
+          crtBackground.setOpacity(0.45);
+        } else if (state.status === 'PAUSED') {
+          crtBackground.setVariant(CRT_SCREENS.CINEMATIC);
+          crtBackground.setOpacity(0.35);
+        } else if (state.status === 'PLAYING') {
+          // Gameplay Levels: Keep CRT background subtle & non-interfering
+          if (state.currentLevel === 1 || state.currentLevel === 3) {
+            crtBackground.setVariant(CRT_SCREENS.TERMINAL);
+            crtBackground.setOpacity(0.16);
+          } else if (state.currentLevel === 2 || state.currentLevel === 4) {
+            // Action / Navigation levels: minimal background opacity to prioritize canvas path & laser visibility
+            crtBackground.setVariant(CRT_SCREENS.CINEMATIC);
+            crtBackground.setOpacity(0.08);
+          } else if (state.currentLevel === 5) {
+            crtBackground.setVariant(CRT_SCREENS.CINEMATIC);
+            crtBackground.setOpacity(0.18);
+          }
+        }
+      }
+
+      // 2. Sync Cyber Swarm Background (Active & luminous on Main Menu only; paused during gameplay)
+      if (swarmBackground) {
+        if (state.status === 'MENU') {
+          swarmBackground.setOpacity(0.65);
+        } else {
+          swarmBackground.setOpacity(0.0);
+        }
+      }
+    });
   }
 
   _bindEvents() {
@@ -152,10 +207,31 @@ class App {
       });
     }
 
-    // Pause Modal: Quit to Menu Button
+    // Pause Modal: Quit Mission Button (Opens confirmation dialog)
     const btnQuit = document.getElementById('btn-quit-menu');
     if (btnQuit) {
       btnQuit.addEventListener('click', () => {
+        audio.playClick();
+        ui.hideModal('modal-pause');
+        ui.showModal('modal-quit-confirm');
+      });
+    }
+
+    // Quit Confirmation Modal: Cancel Button (Returns to Pause menu)
+    const btnQuitCancel = document.getElementById('btn-quit-cancel');
+    if (btnQuitCancel) {
+      btnQuitCancel.addEventListener('click', () => {
+        audio.playClick();
+        ui.hideModal('modal-quit-confirm');
+        ui.showModal('modal-pause');
+      });
+    }
+
+    // Quit Confirmation Modal: Confirm Button (Aborts run and returns to Main Menu)
+    const btnQuitConfirm = document.getElementById('btn-quit-confirm');
+    if (btnQuitConfirm) {
+      btnQuitConfirm.addEventListener('click', () => {
+        audio.playClick();
         this.gameManager.quitToMenu();
       });
     }
@@ -176,20 +252,182 @@ class App {
       });
     }
 
+    // Victory Modal: New Operation Button
+    const btnVicRestart = document.getElementById('btn-victory-restart');
+    if (btnVicRestart) {
+      btnVicRestart.addEventListener('click', () => {
+        this.gameManager.restartGame();
+      });
+    }
+
+    // Victory Modal: Return to Menu Button
+    const btnVicMenu = document.getElementById('btn-victory-menu');
+    if (btnVicMenu) {
+      btnVicMenu.addEventListener('click', () => {
+        this.gameManager.quitToMenu();
+      });
+    }
+
     // Global Key Commands from Input Manager
     input.on('PAUSE', () => {
-      const pauseModal = document.getElementById('modal-pause');
-      if (pauseModal && pauseModal.classList.contains('active')) {
-        this.gameManager.resumeGame();
-      } else {
+      // If quit confirmation modal is open, Escape/P cancels back to pause modal
+      const quitConfirmModal = document.getElementById('modal-quit-confirm');
+      if (quitConfirmModal && quitConfirmModal.classList.contains('active')) {
+        ui.hideModal('modal-quit-confirm');
+        ui.showModal('modal-pause');
+        return;
+      }
+
+      // If an informational modal is open (e.g. How to Play, About, Leaderboard, Player Setup), close it
+      const openInfoModal = document.querySelector('.modal-overlay.active:not(#modal-game-over):not(#modal-victory)');
+      if (openInfoModal) {
+        if (openInfoModal.id === 'modal-pause') {
+          this.gameManager.resumeGame();
+        } else {
+          ui.hideAllModals();
+        }
+        return;
+      }
+
+      if (gameState.state.status === 'PLAYING') {
         this.gameManager.pauseGame();
       }
     });
 
     // Window Blur Auto-Pause (Prevents unfair player timeout during tab switch)
     window.addEventListener('blur', () => {
-      this.gameManager.pauseGame();
+      if (gameState.state.status === 'PLAYING') {
+        this.gameManager.pauseGame();
+      }
     });
+
+    // Hidden Terminal CLI Keyboard Listener
+    this._bindSecretTerminalCommand();
+  }
+
+  /**
+   * Secret Hidden Feature: Terminal CLI interaction
+   * Typing secret commands such as 'TRACE ZION' or 'OVERRIDE 0x00' on the Main Menu
+   * executes a secret diagnostic anomaly transmission sequence without affecting gameplay or score.
+   */
+  _bindSecretTerminalCommand() {
+    let commandBuffer = '';
+    const terminalInputEl = document.getElementById('main-terminal-cmd-input');
+    const promptTextEl = document.getElementById('main-terminal-prompt-text');
+    const terminalBody = document.getElementById('terminal-command-log');
+
+    window.addEventListener('keydown', (e) => {
+      // Only active on Main Menu when no inputs/modals are active
+      if (gameState.state.status !== 'MENU') return;
+      if (document.querySelector('.modal-overlay.active')) return;
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      if (e.key === 'Backspace') {
+        commandBuffer = commandBuffer.slice(0, -1);
+        if (terminalInputEl) terminalInputEl.textContent = commandBuffer ? ' ' + commandBuffer : '';
+        return;
+      }
+
+      if (e.key === 'Enter') {
+        const cmd = commandBuffer.trim().toUpperCase();
+        commandBuffer = '';
+        if (terminalInputEl) terminalInputEl.textContent = '';
+
+        if (!cmd) return;
+
+        // Append player command to log
+        if (terminalBody) {
+          const line = document.createElement('div');
+          line.className = 'log-line text-emerald';
+          line.textContent = `> OPERATOR_CLI: ${cmd}`;
+          const cursorLine = document.getElementById('main-terminal-cursor-line');
+          if (cursorLine) terminalBody.insertBefore(line, cursorLine);
+          else terminalBody.appendChild(line);
+        }
+
+        // Check for secret keywords
+        if (cmd === 'TRACE ZION' || cmd === 'ZION' || cmd === 'ARCHIVE 0X00') {
+          this._triggerSecretSequence();
+        } else if (cmd === 'HELP' || cmd === '?') {
+          if (terminalBody) {
+            const resp = document.createElement('div');
+            resp.className = 'log-line text-cyan';
+            resp.textContent = '> [SYS] AVAILABLE SEC_CMDS: STATUS, DIAG, TRACE [ENCLAVE_ID]';
+            const cursorLine = document.getElementById('main-terminal-cursor-line');
+            if (cursorLine) terminalBody.insertBefore(resp, cursorLine);
+          }
+          audio.playClick();
+        } else {
+          if (terminalBody) {
+            const resp = document.createElement('div');
+            resp.className = 'log-line text-amber';
+            resp.textContent = `> [ERR] Command '${cmd}' unrecognized. Security watchdog standing by.`;
+            const cursorLine = document.getElementById('main-terminal-cursor-line');
+            if (cursorLine) terminalBody.insertBefore(resp, cursorLine);
+          }
+          audio.playWarning();
+        }
+        return;
+      }
+
+      if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
+        if (commandBuffer.length < 24) {
+          commandBuffer += e.key.toUpperCase();
+          if (terminalInputEl) terminalInputEl.textContent = ' ' + commandBuffer;
+          audio.playClick();
+        }
+      }
+    });
+  }
+
+  /**
+   * Secret Easter Egg Sequence: Brief atmospheric signal destabilization
+   */
+  _triggerSecretSequence() {
+    audio.playStageAdvance();
+    ui.showNotification('ANOMALY DETECTED: ARCHIVE NODE 0x00 ACCESSED', 'warning');
+
+    if (crtBackground) {
+      crtBackground.setVariant(CRT_SCREENS.NINTENDO);
+      crtBackground.setOpacity(0.8);
+      if (crtBackground.renderer) {
+        crtBackground.renderer.setGrade({ chromatic: 0.9, noise: 0.8 });
+      }
+    }
+
+    const terminalBody = document.getElementById('terminal-command-log');
+    if (terminalBody) {
+      const secretLogs = [
+        '> [0x00] *** CLASSIFIED QUANTUM ENCLAVE ACCESSED ***',
+        '> [0x00] GHOST PROTOCOL: "THE ESCAPE ROOM IS NOT A TRAP... IT IS A RECRUITMENT BENCHMARK."',
+        '> [0x00] AUTHENTICATED: OPERATOR CODENAME "ZION" REGISTERED IN SYSTEM ARCHIVES.',
+        '> [0x00] RESTORING NOMINAL PERIMETER CONTROLS...'
+      ];
+
+      secretLogs.forEach((msg, idx) => {
+        setTimeout(() => {
+          const l = document.createElement('div');
+          l.className = 'log-line text-emerald';
+          l.style.fontWeight = '700';
+          l.textContent = msg;
+          const cursorLine = document.getElementById('main-terminal-cursor-line');
+          if (cursorLine) terminalBody.insertBefore(l, cursorLine);
+          else terminalBody.appendChild(l);
+          terminalBody.scrollTop = terminalBody.scrollHeight;
+          audio.playClick();
+        }, (idx + 1) * 600);
+      });
+    }
+
+    setTimeout(() => {
+      if (gameState.state.status === 'MENU' && crtBackground) {
+        crtBackground.setVariant(CRT_SCREENS.TERMINAL);
+        crtBackground.setOpacity(0.55);
+        if (crtBackground.renderer) {
+          crtBackground.renderer.setGrade({ chromatic: 0.35, noise: 0.2 });
+        }
+      }
+    }, 4500);
   }
 
   _handlePlayerSetupSubmit() {
@@ -403,6 +641,8 @@ class App {
       const devParam = params.get('dev');
       const levelParam = params.get('level');
       const seedParam = params.get('seed');
+      const scenarioParam = params.get('scenario');
+      const variantParam = params.get('variant');
 
       if ((devParam === '1' || devParam === 'true') && levelParam) {
         const lvl = parseInt(levelParam, 10);
@@ -410,6 +650,22 @@ class App {
           const devOptions = {};
           if (seedParam) {
             devOptions.seed = seedParam;
+          }
+          if (scenarioParam) {
+            const scNum = parseInt(scenarioParam, 10);
+            if (!isNaN(scNum) && scNum >= 1) {
+              devOptions.scenarioIndex = scNum - 1; // 1-indexed (1-5 -> 0-4)
+            } else {
+              devOptions.scenarioId = scenarioParam;
+            }
+          }
+          if (variantParam) {
+            const vNum = parseInt(variantParam, 10);
+            if (!isNaN(vNum) && vNum >= 1) {
+              devOptions.variantIndex = vNum - 1; // 1-indexed (1-5 -> 0-4)
+            } else {
+              devOptions.variantId = variantParam;
+            }
           }
           setTimeout(() => {
             audio.initialize();

@@ -1,122 +1,201 @@
-/* Level 1: Password Breach — Dynamic Evidence Chain & Trust System Styles */
+/* ==========================================================================
+   Level 1: Password Breach — Investigation Desk Workstation Styles
+   Clean, spacious, readable, and technical cybersecurity workspace.
+   ========================================================================== */
 
 .level1-container {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: var(--bg-primary);
+  background: transparent;
   color: var(--text-primary);
-  font-family: var(--font-main);
-  padding: var(--space-md);
-  gap: 12px;
+  font-family: var(--font-ui);
+  padding: var(--space-md) var(--space-lg);
+  gap: 16px;
   box-sizing: border-box;
   overflow-y: auto;
   position: relative;
 }
 
-/* Level 1 Header Banner */
+/* Custom Scrollbars */
+.level1-container::-webkit-scrollbar,
+.l1-evidence-list::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.level1-container::-webkit-scrollbar-track,
+.l1-evidence-list::-webkit-scrollbar-track {
+  background: rgba(10, 15, 26, 0.4);
+  border-radius: var(--radius-xs);
+}
+
+.level1-container::-webkit-scrollbar-thumb,
+.l1-evidence-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 210, 255, 0.25);
+  border-radius: var(--radius-xs);
+}
+
+.level1-container::-webkit-scrollbar-thumb:hover,
+.l1-evidence-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 210, 255, 0.45);
+}
+
+/* --------------------------------------------------------------------------
+   1. LEVEL HEADER & STATUS
+   -------------------------------------------------------------------------- */
 .l1-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 16px;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  padding: 12px 18px;
+  background: rgba(8, 14, 24, 0.75);
+  border: 1px solid rgba(0, 210, 255, 0.16);
+  border-top: 1px solid rgba(0, 210, 255, 0.4);
   border-radius: var(--radius-sm);
   flex-wrap: wrap;
-  gap: 10px;
-  box-shadow: var(--shadow-sm);
+  gap: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .l1-header-title-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .l1-status-pill {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 700;
-  padding: 3px 8px;
+  padding: 4px 10px;
   border-radius: var(--radius-xs);
-  background: rgba(255, 77, 77, 0.15);
+  background: rgba(255, 51, 102, 0.12);
   border: 1px solid var(--danger);
   color: var(--danger);
   letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .l1-status-pill.granted {
-  background: rgba(0, 229, 153, 0.15);
+  background: rgba(0, 229, 153, 0.12);
   border-color: var(--accent-secondary);
   color: var(--accent-secondary);
 }
 
 .l1-sector-heading {
   font-family: var(--font-mono);
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--text-primary);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   margin: 0;
 }
 
 .l1-attempts-group {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-family: var(--font-mono);
   font-size: 0.75rem;
 }
 
 .l1-attempts-label {
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
 .l1-attempt-nodes {
   display: flex;
-  gap: 6px;
+  gap: 8px;
 }
 
 .l1-attempt-pip {
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-xs);
   background: var(--accent-primary);
-  box-shadow: 0 0 6px var(--accent-primary-glow);
+  box-shadow: 0 0 8px var(--accent-primary-glow);
   transition: all var(--transition-fast);
 }
 
 .l1-attempt-pip.used {
-  background: rgba(255, 77, 77, 0.25);
+  background: rgba(255, 51, 102, 0.18);
   border: 1px solid var(--danger);
   box-shadow: none;
 }
 
-/* Evidence Chain Progress Rail */
+/* --------------------------------------------------------------------------
+   2. INVESTIGATION BRIEF & CHAIN PROGRESS (Top Section)
+   -------------------------------------------------------------------------- */
+.l1-brief-panel {
+  background: rgba(8, 14, 24, 0.72);
+  border: 1px solid rgba(0, 210, 255, 0.14);
+  border-left: 3px solid var(--accent-primary);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+.l1-brief-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.l1-brief-tag {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  letter-spacing: 0.08em;
+}
+
+.l1-brief-subtag {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.l1-brief-text {
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.l1-brief-text strong {
+  color: var(--text-primary);
+}
+
+/* Investigation Chain Progress Rail */
 .l1-chain-rail {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  background: rgba(6, 11, 20, 0.65);
+  border: 1px solid rgba(34, 53, 74, 0.6);
+  border-radius: var(--radius-xs);
   padding: 8px 14px;
-  gap: 8px;
+  gap: 10px;
   font-family: var(--font-mono);
-  box-shadow: var(--shadow-sm);
   overflow-x: auto;
+  margin-top: 4px;
 }
 
 .l1-chain-node {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  padding: 5px 10px;
+  background: rgba(10, 16, 26, 0.8);
+  border: 1px solid rgba(34, 53, 74, 0.6);
+  padding: 6px 12px;
   border-radius: var(--radius-xs);
   min-width: 110px;
   transition: all var(--transition-fast);
@@ -138,7 +217,7 @@
 .l1-chain-node .chain-val {
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--text-secondary);
 }
 
 .l1-chain-node.verified .chain-val {
@@ -147,40 +226,41 @@
 
 .chain-arrow {
   color: var(--text-muted);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
 }
 
-/* 3-Column Investigation Grid */
-.l1-investigation-grid {
+/* --------------------------------------------------------------------------
+   3. MID WORKSPACE (2 Columns: Left Forensic Dossier | Right Auth Terminal)
+   -------------------------------------------------------------------------- */
+.l1-desk-grid {
   display: grid;
-  grid-template-columns: 1.2fr 1.3fr 1.1fr;
-  gap: 12px;
-  flex: 1;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 16px;
+  align-items: stretch;
 }
 
-/* Panel Containers */
+/* Shared Panel Card Styles */
 .l1-panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: rgba(8, 14, 24, 0.72);
+  border: 1px solid rgba(0, 210, 255, 0.14);
   border-radius: var(--radius-sm);
-  padding: 14px;
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   position: relative;
-  overflow: hidden;
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
 }
 
 .l1-panel-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(34, 53, 74, 0.5);
+  padding-bottom: 10px;
   font-family: var(--font-mono);
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
 }
 
 .l1-panel-title {
@@ -190,139 +270,182 @@
   letter-spacing: 0.08em;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   margin: 0;
 }
 
 .l1-panel-tag {
   font-size: 0.625rem;
+  font-weight: 600;
   color: var(--text-muted);
-  background: var(--bg-secondary);
-  padding: 2px 6px;
+  background: rgba(10, 18, 30, 0.7);
+  padding: 2px 8px;
   border-radius: var(--radius-xs);
-  border: 1px solid var(--border);
-  letter-spacing: 0.05em;
+  border: 1px solid rgba(34, 53, 74, 0.6);
+  letter-spacing: 0.04em;
 }
 
-/* Left Column: Forensic Dossier */
+/* Keyboard Focus Visibility */
+.l1-filter-btn:focus-visible,
+.l1-btn-correlate:focus-visible,
+.l1-card-toggle-btn:focus-visible,
+.l1-card-checkbox:focus-visible,
+.l1-scratch-input:focus-visible,
+.l1-btn-scratch-fill:focus-visible,
+.l1-btn-hint:focus-visible,
+.l1-terminal-input:focus-visible,
+.l1-key-btn:focus-visible,
+.l1-btn-authorize:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   4. FORENSIC DOSSIER (Left Mid Column)
+   -------------------------------------------------------------------------- */
 .l1-panel-evidence {
-  order: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .l1-filter-group {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
 .l1-filter-btn {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
+  background: rgba(10, 16, 26, 0.75);
+  border: 1px solid rgba(34, 53, 74, 0.7);
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   font-weight: 700;
-  padding: 2px 6px;
+  padding: 4px 10px;
   border-radius: var(--radius-xs);
   cursor: pointer;
   transition: all var(--transition-fast);
+  letter-spacing: 0.04em;
 }
 
 .l1-filter-btn:hover {
-  border-color: var(--accent-primary);
+  border-color: rgba(0, 210, 255, 0.4);
   color: var(--text-primary);
 }
 
 .l1-filter-btn.active {
-  background: rgba(0, 210, 255, 0.15);
+  background: rgba(0, 210, 255, 0.12);
   border-color: var(--accent-primary);
   color: var(--accent-primary);
+  box-shadow: 0 0 8px rgba(0, 210, 255, 0.15);
 }
 
 .l1-evidence-controls {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 8px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
+  padding: 8px 12px;
+  background: rgba(6, 11, 20, 0.65);
+  border: 1px solid rgba(34, 53, 74, 0.6);
   border-radius: var(--radius-xs);
+  gap: 10px;
 }
 
 .l1-selection-count {
   font-size: 0.6875rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-weight: 600;
+  letter-spacing: 0.05em;
 }
 
 .l1-btn-correlate {
   background: var(--accent-primary);
-  color: var(--bg-primary);
+  color: #050a12;
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   font-weight: 800;
-  padding: 4px 10px;
-  border: none;
+  padding: 6px 14px;
+  border: 1px solid var(--accent-primary);
   border-radius: var(--radius-xs);
   cursor: pointer;
   transition: all var(--transition-fast);
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 10px rgba(0, 210, 255, 0.25);
 }
 
 .l1-btn-correlate:hover:not(:disabled) {
-  box-shadow: 0 0 10px var(--accent-primary-glow);
+  background: var(--accent-primary-hover);
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.45);
   transform: translateY(-1px);
+}
+
+.l1-btn-correlate:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .l1-btn-correlate:disabled {
   opacity: 0.35;
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 
 .l1-evidence-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   flex: 1;
   overflow-y: auto;
-  max-height: 440px;
+  max-height: 480px;
+  min-height: 320px;
   padding-right: 4px;
+  scrollbar-gutter: stable;
 }
 
 .l1-evidence-card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--border);
+  background: rgba(10, 16, 26, 0.85);
+  border: 1px solid rgba(34, 53, 74, 0.7);
+  border-left: 3px solid rgba(34, 53, 74, 0.9);
   border-radius: var(--radius-xs);
-  padding: 8px 10px;
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   font-family: var(--font-mono);
   font-size: 0.75rem;
   transition: all var(--transition-fast);
 }
 
+.l1-evidence-card:hover {
+  border-color: rgba(0, 210, 255, 0.35);
+  background: rgba(12, 20, 32, 0.9);
+}
+
 .l1-evidence-card.selected {
   border-color: var(--accent-primary);
-  background: rgba(0, 210, 255, 0.05);
+  border-left-color: var(--accent-primary);
+  background: rgba(0, 210, 255, 0.07);
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.12);
 }
 
 .l1-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .l1-card-checkbox-wrap {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   cursor: pointer;
+  user-select: none;
 }
 
 .l1-card-checkbox {
+  width: 15px;
+  height: 15px;
   cursor: pointer;
   accent-color: var(--accent-primary);
 }
@@ -330,14 +453,16 @@
 .l1-card-id {
   color: var(--accent-primary);
   font-weight: 700;
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
 }
 
 .l1-card-trust {
   font-size: 0.625rem;
   font-weight: 700;
-  padding: 1px 4px;
+  padding: 2px 7px;
   border-radius: 2px;
+  letter-spacing: 0.04em;
 }
 
 .trust-verified {
@@ -348,233 +473,70 @@
 
 .trust-suspect {
   color: var(--warning);
-  background: rgba(255, 170, 0, 0.1);
-  border: 1px solid rgba(255, 170, 0, 0.3);
+  background: rgba(255, 183, 3, 0.1);
+  border: 1px solid rgba(255, 183, 3, 0.3);
 }
 
 .trust-corrupted {
   color: var(--danger);
-  background: rgba(255, 77, 77, 0.1);
-  border: 1px solid rgba(255, 77, 77, 0.3);
+  background: rgba(255, 51, 102, 0.1);
+  border: 1px solid rgba(255, 51, 102, 0.3);
 }
 
 .l1-card-toggle-btn {
-  background: transparent;
-  border: 1px solid var(--border);
+  background: rgba(10, 18, 30, 0.6);
+  border: 1px solid rgba(34, 53, 74, 0.7);
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 0.5625rem;
-  padding: 2px 4px;
-  border-radius: 2px;
+  font-size: 0.625rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: var(--radius-xs);
   cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.l1-card-toggle-btn:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
 }
 
 .l1-card-title {
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--text-primary);
+  letter-spacing: 0.02em;
 }
 
 .l1-card-body {
   color: var(--text-secondary);
-  line-height: 1.45;
+  line-height: 1.6;
   font-size: 0.75rem;
   white-space: pre-line;
-  border-top: 1px solid var(--border-muted);
-  padding-top: 6px;
+  border-top: 1px solid rgba(34, 53, 74, 0.5);
+  padding-top: 8px;
 }
 
-/* Center Column: Investigation Objective & Scratchpad */
-.l1-panel-analysis {
-  order: 2;
-  border-color: rgba(0, 210, 255, 0.25);
-}
-
-.l1-analysis-body {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  flex: 1;
-}
-
-.l1-instruction-box {
-  background: rgba(0, 210, 255, 0.05);
-  border: 1px solid rgba(0, 210, 255, 0.2);
-  border-radius: var(--radius-xs);
-  padding: 10px;
-  font-size: 0.75rem;
-  line-height: 1.45;
-  color: var(--text-primary);
-}
-
-.l1-correlation-status {
-  padding: 8px 10px;
-  border-radius: var(--radius-xs);
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  line-height: 1.4;
-  border: 1px solid var(--border);
-}
-
-.l1-correlation-status.info {
-  background: var(--bg-secondary);
-  color: var(--text-muted);
-}
-
-.l1-correlation-status.success {
-  background: rgba(0, 229, 153, 0.1);
-  border-color: var(--accent-secondary);
-  color: var(--accent-secondary);
-}
-
-.l1-correlation-status.error {
-  background: rgba(255, 77, 77, 0.1);
-  border-color: var(--danger);
-  color: var(--danger);
-}
-
-/* Operator Scratchpad */
-.l1-scratchpad-box {
-  background: var(--bg-secondary);
-  border: 1px dashed var(--border);
-  border-radius: var(--radius-xs);
-  padding: 8px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.l1-scratchpad-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  font-weight: 700;
-  color: var(--text-muted);
-}
-
-.l1-btn-scratch-fill {
-  background: transparent;
-  border: 1px solid var(--accent-primary);
-  color: var(--accent-primary);
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: var(--radius-xs);
-  cursor: pointer;
-}
-
-.l1-btn-scratch-fill:hover {
-  background: rgba(0, 210, 255, 0.15);
-}
-
-.l1-scratchpad-inputs {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-}
-
-.l1-scratch-field {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.l1-scratch-field label {
-  font-family: var(--font-mono);
-  font-size: 0.5625rem;
-  color: var(--text-secondary);
-  font-weight: 600;
-}
-
-.l1-scratch-input {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xs);
-  padding: 4px 6px;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--accent-primary);
-  text-transform: uppercase;
-  outline: none;
-  font-weight: 700;
-}
-
-.l1-scratch-input:focus {
-  border-color: var(--accent-primary);
-}
-
-/* Hint System */
-.l1-hint-container {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.l1-btn-hint {
-  width: 100%;
-  background: var(--bg-secondary);
-  border: 1px solid var(--warning);
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  padding: 6px 10px;
-  border-radius: var(--radius-xs);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.l1-btn-hint:hover:not(:disabled) {
-  background: rgba(255, 170, 0, 0.12);
-}
-
-.l1-btn-hint:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  border-color: var(--border);
-}
-
-.l1-hint-display {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.l1-hint-item {
-  background: rgba(255, 170, 0, 0.08);
-  border: 1px solid rgba(255, 170, 0, 0.3);
-  border-radius: var(--radius-xs);
-  padding: 6px 8px;
-}
-
-.l1-hint-badge {
-  font-family: var(--font-mono);
-  font-size: 0.5625rem;
-  font-weight: 700;
-  color: var(--warning);
-}
-
-.l1-hint-text {
-  font-size: 0.6875rem;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-/* Right Column: Authorization Terminal */
+/* --------------------------------------------------------------------------
+   5. AUTH TERMINAL (Right Mid Column)
+   -------------------------------------------------------------------------- */
 .l1-panel-terminal {
-  order: 3;
-  border-color: rgba(0, 210, 255, 0.35);
-  box-shadow: 0 0 16px rgba(0, 210, 255, 0.05);
+  border-color: rgba(0, 210, 255, 0.22);
+  background: rgba(8, 14, 24, 0.82);
+  display: flex;
+  flex-direction: column;
 }
 
 .l1-terminal-form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
+}
+
+.l1-terminal-left-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .l1-input-wrapper {
@@ -590,16 +552,17 @@
   color: var(--text-secondary);
   display: flex;
   justify-content: space-between;
+  letter-spacing: 0.04em;
 }
 
 .l1-terminal-input {
   width: 100%;
-  background: var(--bg-secondary);
-  border: 1.5px solid var(--border);
+  background: rgba(6, 11, 20, 0.9);
+  border: 1.5px solid rgba(34, 53, 74, 0.8);
   border-radius: var(--radius-xs);
-  padding: 10px 12px;
+  padding: 10px 14px;
   font-family: var(--font-mono);
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   font-weight: 800;
   color: var(--accent-primary);
   letter-spacing: 0.16em;
@@ -613,7 +576,7 @@
 .l1-terminal-input:focus {
   border-color: var(--accent-primary);
   box-shadow: 0 0 14px var(--accent-primary-glow);
-  background: rgba(0, 210, 255, 0.05);
+  background: rgba(0, 210, 255, 0.06);
 }
 
 .l1-terminal-input.error {
@@ -628,32 +591,77 @@
   color: var(--accent-secondary);
 }
 
-/* On-Screen Virtual Keypad */
+/* Feedback Banner */
+.l1-feedback-banner {
+  background: rgba(6, 11, 20, 0.75);
+  border: 1px solid rgba(34, 53, 74, 0.6);
+  border-radius: var(--radius-xs);
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.4;
+  transition: all var(--transition-fast);
+}
+
+.l1-feedback-banner.info {
+  color: var(--text-muted);
+}
+
+.l1-feedback-banner.error {
+  border-color: var(--danger);
+  background: rgba(255, 51, 102, 0.1);
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.l1-feedback-banner.success {
+  border-color: var(--accent-secondary);
+  background: rgba(0, 229, 153, 0.12);
+  color: var(--accent-secondary);
+  font-weight: 700;
+}
+
+/* On-Screen Virtual Keypad & Action Block */
+.l1-terminal-right-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .l1-keypad-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 6px;
 }
 
 .l1-key-btn {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
+  background: rgba(10, 16, 26, 0.85);
+  border: 1px solid rgba(34, 53, 74, 0.8);
   border-radius: var(--radius-xs);
   color: var(--text-primary);
   font-family: var(--font-mono);
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  padding: 8px 4px;
+  padding: 6px 2px;
+  min-height: 34px;
   cursor: pointer;
   transition: all var(--transition-fast);
   text-align: center;
   user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .l1-key-btn:hover:not(:disabled) {
-  background: rgba(0, 210, 255, 0.12);
+  background: rgba(0, 210, 255, 0.15);
   border-color: var(--accent-primary);
   color: var(--accent-primary);
+  box-shadow: 0 0 8px var(--accent-primary-glow);
 }
 
 .l1-key-btn:active:not(:disabled) {
@@ -667,6 +675,7 @@
 
 .l1-key-action {
   color: var(--warning);
+  font-weight: 800;
 }
 
 /* Submit Action Button */
@@ -674,51 +683,216 @@
   width: 100%;
   padding: 12px 16px;
   font-family: var(--font-mono);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 800;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  min-height: 44px;
 }
 
-/* Feedback Banner */
-.l1-feedback-banner {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
+/* --------------------------------------------------------------------------
+   6. LOWER REASONING AREA (Findings, Scratchpad, Hint System)
+   -------------------------------------------------------------------------- */
+.l1-panel-reasoning {
+  border-color: rgba(0, 210, 255, 0.14);
+}
+
+.l1-reasoning-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+/* Operator Scratchpad */
+.l1-scratchpad-box {
+  background: rgba(6, 11, 20, 0.65);
+  border: 1px dashed rgba(34, 53, 74, 0.8);
   border-radius: var(--radius-xs);
-  padding: 8px 10px;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  min-height: 38px;
+  padding: 12px 14px;
   display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.l1-scratchpad-header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 6px;
-  line-height: 1.4;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.l1-btn-scratch-fill {
+  background: rgba(0, 210, 255, 0.06);
+  border: 1px solid rgba(0, 210, 255, 0.3);
+  color: var(--accent-primary);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
   transition: all var(--transition-fast);
 }
 
-.l1-feedback-banner.info {
+.l1-btn-scratch-fill:hover {
+  background: rgba(0, 210, 255, 0.15);
+  box-shadow: 0 0 8px var(--accent-primary-glow);
+}
+
+.l1-scratchpad-inputs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.l1-scratch-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.l1-scratch-field label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.l1-scratch-input {
+  background: rgba(10, 16, 26, 0.9);
+  border: 1px solid rgba(34, 53, 74, 0.8);
+  border-radius: var(--radius-xs);
+  padding: 6px 8px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  outline: none;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  transition: all var(--transition-fast);
+}
+
+.l1-scratch-input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 8px var(--accent-primary-glow);
+}
+
+/* Findings & Hint Box */
+.l1-findings-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.l1-correlation-status {
+  padding: 8px 12px;
+  border-radius: var(--radius-xs);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.4;
+  border: 1px solid rgba(34, 53, 74, 0.6);
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+.l1-correlation-status.info {
+  background: rgba(6, 11, 20, 0.6);
   color: var(--text-muted);
 }
 
-.l1-feedback-banner.error {
-  border-color: var(--danger);
-  background: rgba(255, 77, 77, 0.1);
-  color: var(--danger);
-  font-weight: 600;
-}
-
-.l1-feedback-banner.success {
+.l1-correlation-status.success {
+  background: rgba(0, 229, 153, 0.08);
   border-color: var(--accent-secondary);
-  background: rgba(0, 229, 153, 0.12);
   color: var(--accent-secondary);
-  font-weight: 700;
 }
 
-/* Success Gateway Clear Screen Overlay */
+.l1-correlation-status.error {
+  background: rgba(255, 51, 102, 0.08);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* Hint System */
+.l1-hint-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.l1-btn-hint {
+  width: 100%;
+  background: rgba(10, 16, 26, 0.75);
+  border: 1px solid rgba(255, 183, 3, 0.35);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 8px 12px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  letter-spacing: 0.04em;
+}
+
+.l1-btn-hint:hover:not(:disabled) {
+  background: rgba(255, 183, 3, 0.12);
+  box-shadow: 0 0 8px rgba(255, 183, 3, 0.2);
+  border-color: var(--warning);
+}
+
+.l1-btn-hint:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  border-color: var(--border);
+}
+
+.l1-hint-display {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.l1-hint-item {
+  background: rgba(255, 183, 3, 0.06);
+  border: 1px solid rgba(255, 183, 3, 0.25);
+  border-radius: var(--radius-xs);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.l1-hint-badge {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: var(--warning);
+  letter-spacing: 0.04em;
+}
+
+.l1-hint-text {
+  font-size: 0.75rem;
+  color: var(--text-primary);
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   7. SUCCESS OVERLAY & ANIMATIONS
+   -------------------------------------------------------------------------- */
 .l1-success-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(5, 8, 15, 0.88);
+  background: rgba(5, 8, 15, 0.9);
   backdrop-filter: blur(8px);
   display: flex;
   flex-direction: column;
@@ -739,7 +913,7 @@
   align-items: center;
   justify-content: center;
   color: var(--accent-secondary);
-  font-size: 1.75rem;
+  font-size: 1.85rem;
   font-weight: 800;
   animation: scaleUp 0.4s ease-out;
 }
@@ -760,7 +934,7 @@
   font-weight: 600;
   color: var(--text-secondary);
   display: flex;
-  gap: 16px;
+  gap: 18px;
 }
 
 @keyframes fadeIn {
@@ -779,47 +953,79 @@
   40%, 80% { transform: translateX(6px); }
 }
 
-/* Responsive Styles */
+/* --------------------------------------------------------------------------
+   8. RESPONSIVE COMPOSITION
+   -------------------------------------------------------------------------- */
 @media (max-width: 960px) {
-  .l1-investigation-grid {
+  .l1-desk-grid {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 14px;
   }
 
-  .l1-panel-analysis {
-    order: 1;
+  .l1-reasoning-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
   }
 
-  .l1-panel-evidence {
-    order: 2;
-  }
-
-  .l1-panel-terminal {
-    order: 3;
+  .l1-keypad-grid {
+    grid-template-columns: repeat(6, 1fr);
   }
 
   .l1-evidence-list {
-    max-height: 320px;
+    max-height: 380px;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .level1-container {
-    padding: 8px;
+    padding: 10px;
+    gap: 12px;
+  }
+
+  .l1-header {
+    padding: 10px 12px;
     gap: 8px;
+  }
+
+  .l1-sector-heading {
+    font-size: 0.8125rem;
+  }
+
+  .l1-brief-panel {
+    padding: 12px 14px;
   }
 
   .l1-chain-rail {
     padding: 6px 8px;
-    gap: 4px;
+    gap: 6px;
   }
 
   .l1-chain-node {
     min-width: 80px;
-    padding: 3px 6px;
+    padding: 4px 8px;
+  }
+
+  .l1-keypad-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .l1-scratchpad-inputs {
     grid-template-columns: 1fr;
+  }
+
+  .l1-panel {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .level1-container *,
+  .l1-attempt-pip,
+  .l1-terminal-input,
+  .l1-success-overlay,
+  .l1-success-ring {
+    animation: none !important;
+    transition: none !important;
   }
 }

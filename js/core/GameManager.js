@@ -215,12 +215,16 @@ export class GameManager {
     const { lives, currentLevel } = gameState.state;
     const newLives = lives - 1;
 
-    // Capture existing level variant if retrying Level 2
+    // Capture existing level configuration if retrying
     let retryOptions = {};
-    if (currentLevel === 2 && this.levelManager && this.levelManager.currentLevelInstance) {
-      const existingVariant = this.levelManager.currentLevelInstance.variant;
-      if (existingVariant) {
-        retryOptions = { variant: existingVariant };
+    if (this.levelManager && this.levelManager.currentLevelInstance) {
+      const inst = this.levelManager.currentLevelInstance;
+      if ((currentLevel === 1 || currentLevel === 3 || currentLevel === 5) && inst.scenario) {
+        retryOptions = { scenario: inst.scenario };
+      } else if (currentLevel === 2 && inst.variant) {
+        retryOptions = { variant: inst.variant };
+      } else if (currentLevel === 4 && typeof inst.variantIndex === 'number') {
+        retryOptions = { variantIndex: inst.variantIndex };
       }
     }
 
@@ -281,11 +285,15 @@ export class GameManager {
     this.timer.stop();
     this._stopElapsedTracking();
     if (this.levelManager) this.levelManager.cleanupLevel();
+    this.scoreManager.resetScore();
 
     gameState.update({
       status: 'MENU',
       isPaused: false,
-      isGameOver: false
+      isGameOver: false,
+      isCompleted: false,
+      levelTimeRemaining: 75,
+      score: 0
     });
     ui.hideAllModals();
     ui.showScreen('MENU');
@@ -404,9 +412,20 @@ export class GameManager {
     this._stopElapsedTracking();
     if (this.levelManager) this.levelManager.cleanupLevel();
 
+    // Calculate Survival Bonus: 500 pts per surviving life
+    const remainingLives = gameState.state.lives || 0;
+    const survivalBonus = remainingLives * 500;
+    if (survivalBonus > 0) {
+      const newScore = this.scoreManager.addScore(survivalBonus);
+      gameState.update({ score: newScore });
+    }
+
     gameState.update({ status: 'COMPLETED', isCompleted: true, isPaused: false });
     audio.playSuccess();
     ui.showNotification('CONGRATULATIONS: ALL SECTORS OVERRIDDEN // SYSTEM UNLOCKED!', 'success');
+
+    // Show dedicated Victory / Mission Results Screen
+    ui.showVictory(gameState.state);
 
     // Leaderboard guard
     if (this.canSubmitLeaderboard()) {

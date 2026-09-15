@@ -7,7 +7,7 @@
 - **Project Name:** Cyber Escape
 - **Document Version:** 1.0.0
 - **Status:** Approved Source of Truth
-- **Target Release:** College Mini-Project Submission
+- **Target Release:** Production Web Release
 - **Author:** Project Engineering Team
 
 ---
@@ -24,13 +24,13 @@ Many interactive educational software tools and educational cybersecurity games 
 1. They are dry, text-heavy multiple-choice quizzes that fail to engage learners or gamify security concepts.
 2. They are overly bloated applications requiring heavy client downloads, backend database setups, and high compute resources.
 
-Students and casual learners need an engaging, accessible, zero-friction web experience that introduces foundational digital security metaphors (passwords, secure routing, cryptographic keys, firewall evasion, override protocols) through enjoyable puzzle mechanics.
+Players and casual learners need an engaging, accessible, zero-friction web experience that introduces foundational digital security metaphors (passwords, secure routing, cryptographic keys, firewall evasion, override protocols) through enjoyable puzzle mechanics.
 
 ---
 
 ## 3. Project Motivation
 * **Educational Engagement:** Present fundamental cyber hygiene concepts (strong passwords, decoy analysis, firewall rules, protocol overrides) via interactive game metaphors.
-* **Academic Demonstration:** Showcase clean modular JavaScript architecture, canvas/DOM game mechanics, state machines, and resilient client-side storage without external dependencies.
+* **Technical Demonstration:** Showcase clean modular JavaScript architecture, canvas/DOM game mechanics, state machines, and resilient client-side storage without external dependencies.
 * **Accessibility & Portability:** Create a game that runs instantly on any modern desktop or mobile browser with zero installation.
 
 ---
@@ -44,7 +44,7 @@ Students and casual learners need an engaging, accessible, zero-friction web exp
 ---
 
 ## 5. Target Users
-* **Primary Users:** Computer Science students, faculty evaluators, and peer reviewers assessing college mini-projects.
+* **Primary Users:** Cybersecurity enthusiasts, puzzle game players, and web developers interested in browser game architecture.
 * **Secondary Users:** Casual puzzle gamers and learners interested in cybersecurity concepts.
 * **User Personas:**
   * *Evaluator Prof:* Wants immediate start, intuitive controls, bug-free transitions, and clear scoring criteria.
@@ -220,7 +220,7 @@ Students and casual learners need an engaging, accessible, zero-friction web exp
 * Must not require build tools, bundlers (webpack, vite), or transpilers to play.
 * Must not depend on internet connection for core gameplay.
 * Must use standard vanilla CSS and ES6 modules / classes.
-* Must fit within a college project scope achievable by an individual or small team.
+* Must maintain lightweight architecture achievable with clean modular web technologies.
 
 ---
 
@@ -243,7 +243,7 @@ Students and casual learners need an engaging, accessible, zero-friction web exp
 
 ## 24. Acceptance Criteria & Feature Classification
 
-### Must Have (P0 — Initial Mini-Project Scope)
+### Must Have (P0 — Core Scope)
 - [ ] Clean, cohesive dark cybersecurity UI design system.
 - [ ] Working Main Menu with player name entry and validation.
 - [ ] Global HUD showing player name, level, score, lives, and timer.

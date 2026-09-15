@@ -2,15 +2,19 @@
 
 ## Current Status
 
-Development of **Cyber Escape** is cleanly paused at the completion of **Phase 5** (Level 2 Replayability Revision and Visual Polish).
+Development of **Cyber Escape** is cleanly paused at the completion of **Phase 8** (Level 5 — System Override / Root Kernel Master Finale).
 
 - **Phase 1 — Project Foundation**: COMPLETE (Directory structure, documentation standards, architecture)
 - **Phase 2 — Design System & Main Menu**: COMPLETE (Cyberpunk neon design system, interactive main menu, accessibility, audio subsystem)
 - **Phase 3 — Core Game Engine & HUD**: COMPLETE (GameManager, LevelManager, GameState event bus, HUD synchronization, global lives, timer, and score management)
 - **Phase 4 — Level 1 — Password Breach**: COMPLETE (Forensic deduction, 5 distinct scenarios, evidence correlation, hint penalty, scoring, pause/resume, retry)
 - **Phase 5 — Level 2 — Digital Maze & Controlled Procedural Replayability**: COMPLETE (5 base authored templates, controlled topology and hazard mutations, seeded PRNG, BFS validation, 60s timer limit, retry maze preservation, developer seed override)
+- **Phase 6 — Level 3 — Hidden Key / Memory Dump Forensics**: COMPLETE (5 authored scenarios, 12 memory chips each, responsive card grid, zero answer leaks, onboarding tutorial, field-by-field comparator, triage marking, 75s timer, retry scenario preservation)
+- **Phase 7 — Level 4 — Firewall Dodge / Packet Inspection Corridor**: COMPLETE (Real-time continuous 2D movement, diagonal normalization, multi-lane route choices, 4-state hazard telegraphing, 5 distinct authored variants, single-shot collision handling, midpoint safe island checkpoints, 60s timer, mobile Pointer D-pad)
+- **Phase 8 — Level 5 — System Override / Root Kernel**: COMPLETE (Connected 3-stage finale: Stage 1 Node Recall $\to$ Stage 2 Parameter Coherence Tuning $\to$ Stage 3 Dynamic Timed Disconnect, zero target number leaks, rotating kernel visual, 90s timer, 5 authored scenarios, dedicated Mission Victory screen)
+- **Variation & Replayability Engine**: COMPLETE (Clean distinction between NEW RUN, LEVEL RETRY, GAME RESTART, and PAUSE/RESUME with `runId` state, session scenario/template history deduplication, and developer override parameters across all 5 levels)
 
-Current Checkpoint: **Level 1 and Level 2 are fully playable, verified, and test-covered (93/93 unit tests passing).**
+Current Checkpoint: **All 5 Levels (Sectors 01–05) are fully playable, verified, and test-covered (195/195 unit & integration tests passing across 8 test suites).**
 
 ---
 
@@ -19,16 +23,16 @@ Current Checkpoint: **Level 1 and Level 2 are fully playable, verified, and test
 The codebase follows a strictly modular, decoupled, Vanilla JavaScript (ES Modules) architecture without third-party frameworks.
 
 ### Core Systems (`js/core/` & `js/systems/`):
-- **[GameManager.js](file:///c:/Users/FARHAN%20HARIS/Documents/Cyber-escape/js/core/GameManager.js)**: Central orchestrator and sole authoritative owner of global player lives (3), global accumulated score, level transitions, and game lifecycle states (`MENU`, `PLAYING`, `PAUSED`, `LEVEL_COMPLETE`, `GAME_OVER`, `VICTORY`). Dispatches single failure pathways for hazard collisions and timeouts.
+- **[GameManager.js](file:///c:/Users/FARHAN%20HARIS/Documents/Cyber-escape/js/core/GameManager.js)**: Central orchestrator and sole authoritative owner of global player lives (3), global accumulated score, level transitions, and game lifecycle states (`MENU`, `PLAYING`, `PAUSED`, `LEVEL_COMPLETE`, `GAME_OVER`, `VICTORY`). Dispatches single failure pathways for hazard collisions and timeouts. Enforces `runId` differentiation for new runs vs retries.
 - **[LevelManager.js](file:///c:/Users/FARHAN%20HARIS/Documents/Cyber-escape/js/core/LevelManager.js)**: Manages level registration, initialization, transitions, lifecycle hooks, and cleanup.
-- **[GameState.js](file:///c:/Users/FARHAN%20HARIS/Documents/Cyber-escape/js/core/GameState.js)**: Reactive pub/sub event bus coordinating game state changes across UI, HUD, and level instances.
+- **[GameState.js](file:///c:/Users/FARHAN%20HARIS/Documents/Cyber-escape/js/core/GameState.js)**: Reactive pub/sub event bus coordinating game state changes across UI, HUD, and level instances. Generates unique `runId` on new runs and preserves `runId` across retries/pauses.
 - **[Timer.js](file:///c:/Users/FARHAN%20HARIS/Documents/Cyber-escape/js/systems/Timer.js)**: Robust countdown timer with millisecond precision, pause/resume freezing, timeout callbacks, and tick event dispatching.
 - **[ScoreManager.js](file:///c:/Users/FARHAN%20HARIS/Documents/Cyber-escape/js/systems/ScoreManager.js)**: Calculates and awards base scores, time bonuses, hint penalties, and streak multipliers while strictly enforcing non-negative score floors.
 - **[InputManager.js](file:///c:/Users/FARHAN%20HARIS/Documents/Cyber-escape/js/systems/InputManager.js)**: Unified input handler capturing keyboard (WASD/Arrows), UI clicks, touch events, and mobile D-pad interactions.
 - **[StorageManager.js](file:///c:/Users/FARHAN%20HARIS/Documents/Cyber-escape/js/systems/StorageManager.js)**: LocalStorage abstraction managing player profiles, settings, high scores, and persistent game data with fallbacks.
 - **[UIManager.js](file:///c:/Users/FARHAN%20HARIS/Documents/Cyber-escape/js/systems/UIManager.js)**: Handles screen transitions, modal overlays (pause, retry, level complete, game over), HUD telemetry updates, and accessibility alerts.
 - **[AudioManager.js](file:///c:/Users/FARHAN%20HARIS/Documents/Cyber-escape/js/systems/AudioManager.js)**: Web Audio API sound synthesizers (SFX, ambient drone, UI clicks, success/failure tones) with mute and volume controls.
-- **[devConfig.js](file:///c:/Users/FARHAN%20HARIS/Documents/Cyber-escape/js/core/devConfig.js)**: Centralized developer configuration toggle, URL parameter parser, and developer level selector modal.
+- **[devConfig.js](file:///c:/Users/FARHAN%20HARIS/Documents/Cyber-escape/js/core/devConfig.js)**: Centralized developer configuration toggle, URL parameter parser (supporting `scenario`, `variant`, `seed`), and developer level selector modal.
 
 ---
 
@@ -113,17 +117,18 @@ Open your browser to: `http://localhost:8080`
 Run the full automated test suite using Node.js built-in test runner:
 
 ```powershell
-# Run all test suites
-node --test tests/level2.test.js tests/dev_mode.test.js tests/level1.test.js tests/engine.test.js
+# Run all test suites (107 tests)
+node --test tests/variation.test.js tests/level2.test.js tests/dev_mode.test.js tests/level1.test.js tests/engine.test.js
 
 # Run individual suites
+node --test tests/variation.test.js
 node --test tests/level1.test.js
 node --test tests/level2.test.js
 node --test tests/dev_mode.test.js
 node --test tests/engine.test.js
 ```
 
-Current Test Results: **4 test suites, 93 test cases, 0 failures, 100% passing.**
+Current Test Results: **5 test suites, 107 test cases, 0 failures, 100% passing.**
 
 ---
 

@@ -23,7 +23,7 @@ export class InputManager {
 
   /**
    * Subscribe to specific normalized action commands
-   * @param {string} action 'PAUSE' | 'RESTART' | 'MOVE_UP' | 'MOVE_DOWN' | 'MOVE_LEFT' | 'MOVE_RIGHT'
+   * @param {string} action 'PAUSE' | 'MOVE_UP' | 'MOVE_DOWN' | 'MOVE_LEFT' | 'MOVE_RIGHT'
    * @param {Function} callback
    */
   on(action, callback) {
@@ -49,10 +49,6 @@ export class InputManager {
       case 'P':
       case 'Escape':
         action = 'PAUSE';
-        break;
-      case 'r':
-      case 'R':
-        action = 'RESTART';
         break;
       case 'ArrowUp':
       case 'w':

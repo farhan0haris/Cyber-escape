@@ -199,4 +199,143 @@ describe('Phase 3 Core Engine & Lifecycle Tests', () => {
     sm.deductScore(250);
     assert.strictEqual(sm.getScore(), 0, 'Score floor must be 0');
   });
+
+  test('GAME-016: Quit to Menu cleanly halts timers and transitions to MENU status', () => {
+    gm.startGame('QUIT_TESTER');
+    assert.strictEqual(gameState.state.status, 'PLAYING');
+    assert.strictEqual(gm.timer.isRunning, true);
+
+    gm.pauseGame();
+    assert.strictEqual(gameState.state.status, 'PAUSED');
+
+    gm.quitToMenu();
+    assert.strictEqual(gameState.state.status, 'MENU');
+    assert.strictEqual(gameState.state.isPaused, false);
+    assert.strictEqual(gameState.state.isGameOver, false);
+    assert.strictEqual(gameState.state.isCompleted, false);
+    assert.strictEqual(gm.timer.isRunning, false);
+  });
+
+  test('GAME-017: Quit Mission does NOT submit or pollute leaderboard', () => {
+    storage.set('leaderboard', []);
+    gm.startGame('UNFINISHED_RUN');
+    gameState.update({ score: 1800 });
+
+    gm.quitToMenu();
+    const board = storage.get('leaderboard', []);
+    assert.strictEqual(board.length, 0, 'Leaderboard must not contain abandoned/quit runs');
+  });
+
+  test('GAME-018: New Run after Quit creates fresh run identity and clean state', () => {
+    gm.startGame('FIRST_RUN');
+    const firstRunId = gameState.state.runId;
+    gameState.update({ score: 500, lives: 2 });
+
+    gm.quitToMenu();
+
+    gm.startGame('SECOND_RUN');
+    const secondRunId = gameState.state.runId;
+
+    assert.notStrictEqual(firstRunId, secondRunId, 'New Run must generate fresh runId');
+    assert.strictEqual(gameState.state.playerName, 'SECOND_RUN');
+    assert.strictEqual(gameState.state.score, 0);
+    assert.strictEqual(gameState.state.lives, 3);
+    assert.strictEqual(gameState.state.currentLevel, 1);
+    assert.strictEqual(gameState.state.status, 'PLAYING');
+  });
+
+  test('GAME-019: Quit during late level (e.g. Level 4) resets state cleanly', () => {
+    gm.startDevLevel(4);
+    assert.strictEqual(gameState.state.currentLevel, 4);
+    assert.strictEqual(gameState.state.status, 'PLAYING');
+
+    gm.pauseGame();
+    gm.quitToMenu();
+
+    assert.strictEqual(gameState.state.status, 'MENU');
+    assert.strictEqual(gameState.state.score, 0);
+    assert.strictEqual(gm.timer.isRunning, false);
+  });
+
+  test('GAME-020: Player-facing pause modal does NOT contain a RESTART button in index.html', async () => {
+    const fs = await import('node:fs');
+    const path = await import('node:path');
+    const htmlPath = path.join(import.meta.dirname, '..', 'index.html');
+    const html = fs.readFileSync(htmlPath, 'utf-8');
+
+    // Extract the pause modal section (modal-pause)
+    const pauseModalMatch = html.match(/id="modal-pause"[\s\S]*?<\/div>\s*<\/div>\s*<\/div>/);
+    assert.ok(pauseModalMatch, 'Pause modal must exist in index.html');
+    const pauseModalHtml = pauseModalMatch[0];
+
+    // Must NOT contain btn-pause-restart or any RESTART button
+    assert.ok(!pauseModalHtml.includes('btn-pause-restart'), 'Pause modal must NOT contain btn-pause-restart');
+    assert.ok(!pauseModalHtml.includes('>RESTART MISSION<'), 'Pause modal must NOT contain RESTART MISSION text');
+    assert.ok(!pauseModalHtml.includes('>RESTART<'), 'Pause modal must NOT contain a RESTART button');
+
+    // Must contain RESUME EXECUTION and QUIT MISSION
+    assert.ok(pauseModalHtml.includes('btn-resume-game'), 'Pause modal must contain RESUME EXECUTION button');
+    assert.ok(pauseModalHtml.includes('btn-quit-menu'), 'Pause modal must contain QUIT MISSION button');
+  });
+
+  test('GAME-021: Player-facing HUD does NOT contain a RESTART button in index.html', async () => {
+    const fs = await import('node:fs');
+    const path = await import('node:path');
+    const htmlPath = path.join(import.meta.dirname, '..', 'index.html');
+    const html = fs.readFileSync(htmlPath, 'utf-8');
+
+    // Extract the HUD controls section
+    const hudControlsMatch = html.match(/class="hud-controls"[\s\S]*?<\/div>/);
+    assert.ok(hudControlsMatch, 'HUD controls section must exist in index.html');
+    const hudControlsHtml = hudControlsMatch[0];
+
+    // Must NOT contain btn-restart-game
+    assert.ok(!hudControlsHtml.includes('btn-restart-game'), 'HUD must NOT contain btn-restart-game');
+    assert.ok(!hudControlsHtml.includes('>RESTART<'), 'HUD must NOT contain a RESTART button');
+
+    // Must still contain the PAUSE button
+    assert.ok(hudControlsHtml.includes('btn-pause-game'), 'HUD must contain PAUSE button');
+  });
+
+  test('GAME-022: Quit confirmation modal exists with correct structure', async () => {
+    const fs = await import('node:fs');
+    const path = await import('node:path');
+    const htmlPath = path.join(import.meta.dirname, '..', 'index.html');
+    const html = fs.readFileSync(htmlPath, 'utf-8');
+
+    // Quit confirmation modal must exist
+    assert.ok(html.includes('id="modal-quit-confirm"'), 'Quit confirmation modal must exist');
+    assert.ok(html.includes('ABORT CURRENT MISSION?'), 'Quit confirmation must ask ABORT CURRENT MISSION?');
+    assert.ok(html.includes('btn-quit-cancel'), 'Quit confirmation must have CANCEL button');
+    assert.ok(html.includes('btn-quit-confirm'), 'Quit confirmation must have QUIT MISSION confirm button');
+  });
+
+  test('GAME-023: Internal restartGame() remains functional for developer/testing use', () => {
+    gm.startGame('DEV_RESTART_TEST');
+    gameState.update({ score: 1500, lives: 1, currentLevel: 3 });
+
+    // restartGame() must exist and function correctly
+    assert.strictEqual(typeof gm.restartGame, 'function', 'restartGame() must exist on GameManager');
+    gm.restartGame();
+
+    // After restart: score=0, lives=3, level=1, status=PLAYING
+    assert.strictEqual(gameState.state.score, 0, 'Score must reset to 0 after restart');
+    assert.strictEqual(gameState.state.lives, 3, 'Lives must reset to 3 after restart');
+    assert.strictEqual(gameState.state.currentLevel, 1, 'Level must reset to 1 after restart');
+    assert.strictEqual(gameState.state.status, 'PLAYING', 'Status must be PLAYING after restart');
+  });
+
+  test('GAME-024: InputManager does NOT map R key to RESTART action', async () => {
+    const { InputManager } = await import('../js/systems/InputManager.js');
+    const inputMgr = new InputManager();
+
+    // Collect actions emitted for 'R' key
+    let emittedAction = null;
+    inputMgr.on('RESTART', () => { emittedAction = 'RESTART'; });
+
+    // Simulate R keydown via internal handler
+    inputMgr._handleKeyDown({ key: 'R', preventDefault: () => {}, target: { tagName: 'DIV' } });
+    assert.strictEqual(emittedAction, null, 'Pressing R must NOT emit RESTART action');
+    inputMgr.cleanup();
+  });
 });

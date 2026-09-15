@@ -474,10 +474,33 @@ export const LEVEL1_SCENARIOS = [
   }
 ];
 
+const recentLevel1Scenarios = [];
+
+export function recordLevel1Scenario(scenarioId) {
+  if (!scenarioId) return;
+  recentLevel1Scenarios.unshift(scenarioId);
+  if (recentLevel1Scenarios.length > 3) {
+    recentLevel1Scenarios.pop();
+  }
+}
+
+export function isRecentLevel1Scenario(scenarioId) {
+  return recentLevel1Scenarios.includes(scenarioId);
+}
+
+export function clearLevel1ScenarioHistory() {
+  recentLevel1Scenarios.length = 0;
+}
+
+export function getRecentLevel1Scenarios() {
+  return [...recentLevel1Scenarios];
+}
+
 export class Level1 {
-  constructor(container, callbacks = {}) {
+  constructor(container, callbacks = {}, options = {}) {
     this.container = container;
     this.callbacks = callbacks; // { onComplete, onLoseLife, onPenalty }
+    this.options = options;
     
     this.maxAttempts = 3;
     this.failedAttempts = 0;
@@ -515,12 +538,44 @@ export class Level1 {
   }
 
   selectScenario(index = null) {
-    if (typeof index === 'number' && index >= 0 && index < LEVEL1_SCENARIOS.length) {
-      this.scenario = LEVEL1_SCENARIOS[index];
-    } else {
-      const randIndex = Math.floor(Math.random() * LEVEL1_SCENARIOS.length);
-      this.scenario = LEVEL1_SCENARIOS[randIndex];
+    // 1. Direct object passed via options.scenario (e.g. RETRY)
+    if (this.options && this.options.scenario && typeof this.options.scenario === 'object') {
+      this.scenario = this.options.scenario;
+      return;
     }
+
+    // 2. Explicit index passed (e.g. via argument or options.scenarioIndex or options.scenario)
+    let explicitIdx = index;
+    if (explicitIdx === null && this.options) {
+      if (typeof this.options.scenarioIndex === 'number') {
+        explicitIdx = this.options.scenarioIndex;
+      } else if (typeof this.options.scenario === 'number') {
+        explicitIdx = this.options.scenario;
+      }
+    }
+
+    if (typeof explicitIdx === 'number' && explicitIdx >= 0 && explicitIdx < LEVEL1_SCENARIOS.length) {
+      this.scenario = LEVEL1_SCENARIOS[explicitIdx];
+      recordLevel1Scenario(this.scenario.id);
+      return;
+    }
+
+    // 3. Explicit scenario ID (e.g. 'scenario_02_beta')
+    if (this.options && this.options.scenarioId) {
+      const found = LEVEL1_SCENARIOS.find(s => s.id === this.options.scenarioId);
+      if (found) {
+        this.scenario = found;
+        recordLevel1Scenario(this.scenario.id);
+        return;
+      }
+    }
+
+    // 4. NEW RUN selection: avoid immediately recent scenarios
+    const available = LEVEL1_SCENARIOS.filter(s => !isRecentLevel1Scenario(s.id));
+    const pool = available.length > 0 ? available : LEVEL1_SCENARIOS;
+    const chosen = pool[Math.floor(Math.random() * pool.length)];
+    this.scenario = chosen;
+    recordLevel1Scenario(this.scenario.id);
   }
 
   render() {
@@ -532,7 +587,7 @@ export class Level1 {
 
     this.container.innerHTML = `
       <div class="level1-container" id="level1-screen">
-        <!-- Level Header -->
+        <!-- 1. Level Header -->
         <div class="l1-header">
           <div class="l1-header-title-group">
             <span class="l1-status-pill" id="l1-status-pill">STATUS: LOCKED</span>
@@ -548,33 +603,43 @@ export class Level1 {
           </div>
         </div>
 
-        <!-- Investigation Chain Progress Rail -->
-        <div class="l1-chain-rail" aria-label="Investigation Chain Progress">
-          <div class="l1-chain-node ${this.chainStatus.node ? 'verified' : ''}">
-            <span class="chain-label">1. NODE</span>
-            <span class="chain-val" id="chain-val-node">${this.chainStatus.node ? this.scenario.chainTargets.node : 'UNVERIFIED'}</span>
+        <!-- 2. Investigation Brief & Chain Progress (Top Section) -->
+        <div class="l1-brief-panel">
+          <div class="l1-brief-header">
+            <span class="l1-brief-tag font-mono">MISSION OBJECTIVE</span>
+            <span class="l1-brief-subtag font-mono text-cyan">TARGET: ${this.scenario.name}</span>
           </div>
-          <span class="chain-arrow">→</span>
-          <div class="l1-chain-node ${this.chainStatus.trace ? 'verified' : ''}">
-            <span class="chain-label">2. TRACE HASH</span>
-            <span class="chain-val" id="chain-val-trace">${this.chainStatus.trace ? this.scenario.chainTargets.trace : 'LOCKED'}</span>
+          <div class="l1-brief-text">
+            Establish a verified chain of custody across nodes, buffer routing, service policies, and timeline deltas to synthesize the 3-part credential <strong>[HASH][PORT][YEAR]</strong>. Select and correlate compatible records to advance the security chain.
           </div>
-          <span class="chain-arrow">→</span>
-          <div class="l1-chain-node ${this.chainStatus.service ? 'verified' : ''}">
-            <span class="chain-label">3. SERVICE PORT</span>
-            <span class="chain-val" id="chain-val-service">${this.chainStatus.service ? this.scenario.chainTargets.service : 'LOCKED'}</span>
-          </div>
-          <span class="chain-arrow">→</span>
-          <div class="l1-chain-node ${this.chainStatus.timeline ? 'verified' : ''}">
-            <span class="chain-label">4. TIMELINE</span>
-            <span class="chain-val" id="chain-val-timeline">${this.chainStatus.timeline ? this.scenario.chainTargets.timeline : 'LOCKED'}</span>
+          <!-- Investigation Chain Progress Rail -->
+          <div class="l1-chain-rail" aria-label="Investigation Chain Progress">
+            <div class="l1-chain-node ${this.chainStatus.node ? 'verified' : ''}">
+              <span class="chain-label">1. NODE</span>
+              <span class="chain-val" id="chain-val-node">${this.chainStatus.node ? this.scenario.chainTargets.node : 'UNVERIFIED'}</span>
+            </div>
+            <span class="chain-arrow">→</span>
+            <div class="l1-chain-node ${this.chainStatus.trace ? 'verified' : ''}">
+              <span class="chain-label">2. TRACE HASH</span>
+              <span class="chain-val" id="chain-val-trace">${this.chainStatus.trace ? this.scenario.chainTargets.trace : 'LOCKED'}</span>
+            </div>
+            <span class="chain-arrow">→</span>
+            <div class="l1-chain-node ${this.chainStatus.service ? 'verified' : ''}">
+              <span class="chain-label">3. SERVICE PORT</span>
+              <span class="chain-val" id="chain-val-service">${this.chainStatus.service ? this.scenario.chainTargets.service : 'LOCKED'}</span>
+            </div>
+            <span class="chain-arrow">→</span>
+            <div class="l1-chain-node ${this.chainStatus.timeline ? 'verified' : ''}">
+              <span class="chain-label">4. TIMELINE</span>
+              <span class="chain-val" id="chain-val-timeline">${this.chainStatus.timeline ? this.scenario.chainTargets.timeline : 'LOCKED'}</span>
+            </div>
           </div>
         </div>
 
-        <!-- 3-Column Investigation Dashboard -->
-        <div class="l1-investigation-grid">
+        <!-- 3. Mid Workspace: Left (Forensic Dossier) & Right (Auth Terminal) -->
+        <div class="l1-desk-grid">
           
-          <!-- LEFT PANEL: Expandable Forensic Records -->
+          <!-- LEFT: Forensic Dossier (Main Investigation Area) -->
           <div class="l1-panel l1-panel-evidence">
             <div class="l1-panel-header">
               <h3 class="l1-panel-title">
@@ -601,48 +666,111 @@ export class Level1 {
             </div>
           </div>
 
-          <!-- CENTER PANEL: Investigation Objective & Deduction Scratchpad -->
-          <div class="l1-panel l1-panel-analysis">
+          <!-- RIGHT: Auth Terminal (Final Destination) -->
+          <div class="l1-panel l1-panel-terminal">
             <div class="l1-panel-header">
               <h3 class="l1-panel-title">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                INVESTIGATION PROTOCOL
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                AUTH TERMINAL
               </h3>
-              <span class="l1-panel-tag">DYNAMIC REASONING</span>
+              <span class="l1-panel-tag text-emerald font-mono">GATE 01 // OVERRIDE</span>
             </div>
-            
-            <div class="l1-analysis-body">
-              <div class="l1-instruction-box">
-                <strong>AUTHORIZATION OBJECTIVE:</strong> Establish a verified chain of custody across nodes, buffer routing, service policies, and timeline deltas to synthesize the 3-part credential <strong>[HASH][PORT][YEAR]</strong>. Not all logs are trustworthy. Select and correlate compatible records to advance the chain.
+            <form class="l1-terminal-form" id="l1-auth-form" autocomplete="off" onsubmit="return false;">
+              <div class="l1-terminal-left-block">
+                <div class="l1-input-wrapper">
+                  <label for="l1-password-input" class="l1-input-label">
+                    <span>ENTER SYNTHESIZED OVERRIDE KEY:</span>
+                    <span class="text-cyan font-mono">${this.scenario.format}</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    id="l1-password-input" 
+                    class="l1-terminal-input" 
+                    placeholder="${this.scenario.format}"
+                    maxlength="30"
+                    spellcheck="false"
+                    autocapitalize="characters"
+                    required
+                  />
+                </div>
+                <!-- Feedback / Console Output -->
+                <div class="l1-feedback-banner info" id="l1-feedback-banner" role="status" aria-live="polite">
+                  AWAITING CREDENTIAL ENTRY...
+                </div>
               </div>
 
+              <div class="l1-terminal-right-block">
+                <!-- Quick Virtual Keypad -->
+                <div class="l1-keypad-grid" aria-label="Alphanumeric keypad">
+                  <button type="button" class="l1-key-btn" data-key="0">0</button>
+                  <button type="button" class="l1-key-btn" data-key="1">1</button>
+                  <button type="button" class="l1-key-btn" data-key="2">2</button>
+                  <button type="button" class="l1-key-btn" data-key="3">3</button>
+                  <button type="button" class="l1-key-btn" data-key="4">4</button>
+                  <button type="button" class="l1-key-btn" data-key="5">5</button>
+                  <button type="button" class="l1-key-btn" data-key="6">6</button>
+                  <button type="button" class="l1-key-btn" data-key="7">7</button>
+                  <button type="button" class="l1-key-btn" data-key="8">8</button>
+                  <button type="button" class="l1-key-btn" data-key="9">9</button>
+                  <button type="button" class="l1-key-btn" data-key="A">A</button>
+                  <button type="button" class="l1-key-btn" data-key="B">B</button>
+                  <button type="button" class="l1-key-btn" data-key="C">C</button>
+                  <button type="button" class="l1-key-btn" data-key="D">D</button>
+                  <button type="button" class="l1-key-btn" data-key="E">E</button>
+                  <button type="button" class="l1-key-btn" data-key="F">F</button>
+                  <button type="button" class="l1-key-btn l1-key-action" data-action="clear">CLR</button>
+                  <button type="button" class="l1-key-btn l1-key-action" data-action="backspace">⌫</button>
+                </div>
+
+                <button type="submit" id="l1-submit-btn" class="btn btn-primary l1-btn-authorize">
+                  AUTHENTICATE OVERRIDE
+                </button>
+              </div>
+            </form>
+          </div>
+
+        </div>
+
+        <!-- 4. Lower Reasoning Area (Findings, Scratchpad, Hint System) -->
+        <div class="l1-panel l1-panel-reasoning">
+          <div class="l1-panel-header">
+            <h3 class="l1-panel-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              FINDINGS & REASONING WORKSPACE
+            </h3>
+            <span class="l1-panel-tag font-mono">DEDUCTION TOOLS</span>
+          </div>
+
+          <div class="l1-reasoning-grid">
+            <!-- Operator Synthesis Scratchpad -->
+            <div class="l1-scratchpad-box">
+              <div class="l1-scratchpad-header">
+                <span>OPERATOR SYNTHESIS SCRATCHPAD</span>
+                <button type="button" id="l1-btn-autofill" class="l1-btn-scratch-fill" title="Transfer synthesized values to terminal">
+                  TRANSFER TO TERMINAL →
+                </button>
+              </div>
+              <div class="l1-scratchpad-inputs">
+                <div class="l1-scratch-field">
+                  <label for="l1-scratch-hash">DEDUCED HASH:</label>
+                  <input type="text" id="l1-scratch-hash" class="l1-scratch-input" placeholder="e.g. 7F91" maxlength="6" />
+                </div>
+                <div class="l1-scratch-field">
+                  <label for="l1-scratch-port">DEDUCED PORT:</label>
+                  <input type="text" id="l1-scratch-port" class="l1-scratch-input" placeholder="e.g. 22" maxlength="5" />
+                </div>
+                <div class="l1-scratch-field">
+                  <label for="l1-scratch-year">DEDUCED YEAR:</label>
+                  <input type="text" id="l1-scratch-year" class="l1-scratch-input" placeholder="e.g. 2087" maxlength="4" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Findings & Hint Container -->
+            <div class="l1-findings-box">
               <!-- Correlation Feedback Status -->
               <div id="l1-correlation-status" class="l1-correlation-status info" role="status" aria-live="polite">
                 SELECT 2 OR MORE RECORDS TO ESTABLISH CORRELATION
-              </div>
-
-              <!-- Operator Scratchpad Workspace -->
-              <div class="l1-scratchpad-box">
-                <div class="l1-scratchpad-header">
-                  <span>OPERATOR SYNTHESIS SCRATCHPAD</span>
-                  <button type="button" id="l1-btn-autofill" class="l1-btn-scratch-fill" title="Transfer synthesized values to terminal">
-                    TRANSFER TO TERMINAL →
-                  </button>
-                </div>
-                <div class="l1-scratchpad-inputs">
-                  <div class="l1-scratch-field">
-                    <label for="l1-scratch-hash">DEDUCED HASH:</label>
-                    <input type="text" id="l1-scratch-hash" class="l1-scratch-input" placeholder="e.g. 7F91" maxlength="6" />
-                  </div>
-                  <div class="l1-scratch-field">
-                    <label for="l1-scratch-port">DEDUCED PORT:</label>
-                    <input type="text" id="l1-scratch-port" class="l1-scratch-input" placeholder="e.g. 22" maxlength="5" />
-                  </div>
-                  <div class="l1-scratch-field">
-                    <label for="l1-scratch-year">DEDUCED YEAR:</label>
-                    <input type="text" id="l1-scratch-year" class="l1-scratch-input" placeholder="e.g. 2087" maxlength="4" />
-                  </div>
-                </div>
               </div>
 
               <!-- Hint Request Control -->
@@ -654,71 +782,10 @@ export class Level1 {
                   ${this.renderActiveHints()}
                 </div>
               </div>
-
             </div>
           </div>
-
-          <!-- RIGHT PANEL: Authorization Terminal -->
-          <div class="l1-panel l1-panel-terminal">
-            <div class="l1-panel-header">
-              <h3 class="l1-panel-title">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                AUTH TERMINAL
-              </h3>
-              <span class="l1-panel-tag text-emerald">GATE 01</span>
-            </div>
-            <form class="l1-terminal-form" id="l1-auth-form" autocomplete="off" onsubmit="return false;">
-              <div class="l1-input-wrapper">
-                <label for="l1-password-input" class="l1-input-label">
-                  <span>ENTER SYNTHESIZED OVERRIDE KEY:</span>
-                  <span class="text-cyan">${this.scenario.format}</span>
-                </label>
-                <input 
-                  type="text" 
-                  id="l1-password-input" 
-                  class="l1-terminal-input" 
-                  placeholder="${this.scenario.format}"
-                  maxlength="30"
-                  spellcheck="false"
-                  autocapitalize="characters"
-                  required
-                />
-              </div>
-
-              <!-- Quick Virtual Keypad -->
-              <div class="l1-keypad-grid" aria-label="Alphanumeric keypad">
-                <button type="button" class="l1-key-btn" data-key="0">0</button>
-                <button type="button" class="l1-key-btn" data-key="1">1</button>
-                <button type="button" class="l1-key-btn" data-key="2">2</button>
-                <button type="button" class="l1-key-btn" data-key="3">3</button>
-                <button type="button" class="l1-key-btn" data-key="4">4</button>
-                <button type="button" class="l1-key-btn" data-key="5">5</button>
-                <button type="button" class="l1-key-btn" data-key="6">6</button>
-                <button type="button" class="l1-key-btn" data-key="7">7</button>
-                <button type="button" class="l1-key-btn" data-key="8">8</button>
-                <button type="button" class="l1-key-btn" data-key="9">9</button>
-                <button type="button" class="l1-key-btn" data-key="A">A</button>
-                <button type="button" class="l1-key-btn" data-key="B">B</button>
-                <button type="button" class="l1-key-btn" data-key="C">C</button>
-                <button type="button" class="l1-key-btn" data-key="D">D</button>
-                <button type="button" class="l1-key-btn" data-key="E">E</button>
-                <button type="button" class="l1-key-btn" data-key="F">F</button>
-                <button type="button" class="l1-key-btn l1-key-action" data-action="clear">CLR</button>
-                <button type="button" class="l1-key-btn l1-key-action" data-action="backspace">⌫</button>
-              </div>
-
-              <button type="submit" id="l1-submit-btn" class="btn btn-primary l1-btn-authorize">
-                AUTHENTICATE OVERRIDE
-              </button>
-
-              <!-- Feedback / Console Output -->
-              <div class="l1-feedback-banner info" id="l1-feedback-banner" role="status" aria-live="polite">
-                AWAITING CREDENTIAL ENTRY...
-              </div>
-            </form>
-          </div>
-
         </div>
+
       </div>
     `;
   }

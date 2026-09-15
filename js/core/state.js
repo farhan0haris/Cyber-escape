@@ -13,6 +13,7 @@ export const INITIAL_STATE = Object.freeze({
   totalTimeElapsed: 0,
   completedLevels: [],
   status: 'MENU', // 'MENU' | 'PLAYER_SETUP' | 'PLAYING' | 'PAUSED' | 'GAME_OVER' | 'COMPLETED'
+  runId: null,
   isPaused: false,
   isGameOver: false,
   isCompleted: false,
@@ -72,7 +73,8 @@ export class GameState {
     this._state = {
       ...INITIAL_STATE,
       playerName: this._state.playerName, // preserve current player name
-      sessionId: `session_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`
+      sessionId: `session_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+      runId: generateRunId()
     };
     this._notify();
   }
@@ -87,6 +89,10 @@ export class GameState {
       }
     });
   }
+}
+
+export function generateRunId() {
+  return `run_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
 }
 
 export const gameState = new GameState();

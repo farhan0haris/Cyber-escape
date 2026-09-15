@@ -132,9 +132,17 @@ The architecture uses standard **Modular Vanilla JavaScript (ES6 Modules)** with
   * Click / Input beep
   * Error / Access denied buzzer
   * Success / Access granted chord
-  * Warning pulse
-  * Victory fanfare
-* Supports instant mute/unmute and volume controls without requiring external `.mp3` or `.wav` asset downloads.
+### 3.12 Lifecycle Commands & Variation Management
+
+The game engine enforces a strict distinction between lifecycle commands to ensure proper replayability and fair deduplication:
+
+| Lifecycle Action | `runId` State | Level 1 Scenario Behavior | Level 2 Maze Behavior | Score / Lives State |
+|---|---|---|---|---|
+| **START NEW RUN** (`startGame`) | Fresh `runId` generated | Selects among candidate scenarios, avoiding immediate recent repetition | Selects non-recent base template & generates fresh procedural seed | Score = 0, Lives = 3, Level = 1 |
+| **LEVEL RETRY** (`retryCurrentLevel`) | Existing `runId` preserved | Preserves **exact same scenario** and expected answer | Preserves **exact same base template, seed, and maze layout** | Lives = Lives - 1, Score preserved |
+| **GAME RESTART** (`restartGame`) | Fresh `runId` generated | Eligible for new distinct scenario selection | Eligible for new base template and fresh procedural seed | Score = 0, Lives = 3, Level = 1 |
+| **PAUSE / RESUME** (`pauseGame` / `resumeGame`) | Existing `runId` preserved | Preserved | Preserved | Unchanged, Timer frozen/resumed |
+| **QUIT TO MENU** (`quitToMenu`) | `runId` reset to null | Unmounted & cleaned | Unmounted & cleaned | Active session terminated |
 
 ---
 

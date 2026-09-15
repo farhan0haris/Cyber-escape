@@ -89,6 +89,12 @@ $$\text{End Game Bonus} = \text{RemainingLives} \times 500$$
 $$\text{Total Score} = \sum_{i=1}^5 \text{LevelScore}_i + \text{EndGameBonus}$$
 * Guaranteed non-negative score: Under no circumstances can a level score or total score drop below 0.
 
+### 5.4 Run Identity & Replayability Variation Rules
+* **New Runs vs Retries:**
+  * **New Run (`startGame` / `restartGame`):** Generates a unique `runId`. Level 1 chooses a new puzzle scenario (avoiding recent duplicates); Level 2 selects a non-recent base template and generates a fresh procedural seed.
+  * **Level Retry (`retryCurrentLevel`):** Preserves `runId`. Level 1 retains the exact same scenario and answer; Level 2 retains the exact same base template, seed, grid, and hazards.
+  * **Developer Mode Override:** Explicit scenario (`?dev=1&level=1&scenario=1..5`) or seed (`?dev=1&level=2&seed=12345`) overrides random selection deterministically.
+
 ---
 
 ## 6. Detailed Level Specifications
@@ -187,71 +193,85 @@ $$\text{Total Score} = \sum_{i=1}^5 \text{LevelScore}_i + \text{EndGameBonus}$$
 
 ---
 
-### LEVEL 3 — HIDDEN KEY
-* **Cyber Metaphor:** Analyzing a cluttered memory dump to isolate the authentic decryption key among obfuscated decoys.
-* **Duration:** 60 Seconds.
+### LEVEL 3 — HIDDEN KEY / MEMORY DUMP FORENSICS
+* **Cyber Metaphor:** Analyzing a volatile memory dump to isolate the authentic decryption key among 11 corrupted, spoofed, or stale decoys.
+* **Duration:** 75 Seconds.
 * **Base Score:** 1,200 pts (+15 pts per remaining second).
-* **Penalty:** -100 pts and -5 seconds deduction for each decoy clicked.
+* **Penalty:** -100 pts and -5 seconds deduction for each false decoy verification.
+* **Lockout:** 3 failed verifications trigger a security lockout and life loss.
 
-#### Gameplay Mechanics:
-1. The game displays an interactive grid of **12 inspectable memory chips / cards**.
-2. Each card has a visual label (e.g., `BUFFER_01`, `CERT_02`, `KEY_07`).
-3. Clicking/tapping any card displays its details in an **Inspector Sub-Panel**:
-   * Displays Header, Algorithm, Fingerprint, and Checksum status.
-4. **Authentic Key Criteria (Explicitly shown on screen banner):**
-   * *Algorithm:* `AES-256`
-   * *Fingerprint:* Starts with `7F`
-   * *Checksum:* `VERIFIED_OK`
-5. **Decoy Nodes (11 total):**
-   * Examples: Missing AES header, starting with `3A`, corrupted checksum, or expired SSL certificate.
-   * Clicking "INJECT KEY" on a decoy causes an error buzzer, -100 pts, and -5 seconds off the clock.
-6. **Authentic Key (1 unique node):**
-   * Satisfies all 3 criteria. Clicking "INJECT KEY" instantly triggers a green cryptographic match animation and advances to Level 4.
+#### Key Forensic Systems & Mechanics:
+1. **12 Inspectable Memory Blocks:** Interactive grid displaying chip labels, memory addresses, algorithms, and triage markers.
+2. **First-Time Onboarding Tutorial (Scenario 1):**
+   - Step 1: Inspect 2 blocks to establish an initial evidence baseline.
+   - Step 2: Pin a reference block and compare against target blocks.
+   - Step 3: Run `[CORRELATE RECORDS]` to evaluate origin domain & signature family alignment.
+   - Step 4: Triage suspect blocks (`NORMAL` $\to$ `SUSPICIOUS` $\to$ `CANDIDATE`).
+   - Step 5: Verify candidate block once the Authenticity Gate unlocks.
+3. **Forensic Comparator:** Live field-by-field diffing (`MATCH`, `DIFFERENT`, `ANOMALY`) between pinned reference and target candidate.
+4. **Active Record Correlation (`[CORRELATE RECORDS]`):**
+   - Evaluates shared cipher architecture, provenance enclave, and signature family without revealing answers.
+5. **Zero Answer Leaks:** Internal authenticity flags (`isAuthentic`, `defectReason`) are never rendered in the DOM or UI.
+6. **Retry Behavior:** Exact scenario and 12-chip layout are preserved on retry while resetting transient triage/comparison state and deducting 1 life.
 
 ---
+---
 
-### LEVEL 4 — FIREWALL DODGE
-* **Cyber Metaphor:** Crossing a live deep-packet inspection zone protected by sweeping laser beams and packet filters.
+### LEVEL 4 — FIREWALL DODGE / PACKET INSPECTION CORRIDOR
+* **Cyber Metaphor:** Traversing a multi-lane high-throughput packet inspection conduit protected by oscillating firewall lasers, patrol sentinels, pulse gates, and packet storms.
 * **Duration:** 60 Seconds.
 * **Base Score:** 2,000 pts (+20 pts per remaining second).
-* **Penalty:** -250 pts and loss of 1 life upon colliding with a firewall beam.
+* **Penalty:** -250 pts and loss of 1 life upon colliding with an active hazard (applied once per collision event).
+* **Target Pacing:** 30–40s clean skilled run time with ample observation/repositioning buffer.
 
-#### Gameplay Mechanics:
-1. Canvas-based arena (800×450px):
-   * **Start Zone (Safe Buffer):** Left strip ($x = 0 \to 80$px) highlighted with green border.
-   * **Goal Zone (Safe Terminal):** Right strip ($x = 720 \to 800$px) highlighted with pulsing cyan exit gate.
-   * **Active Hazard Zone:** Middle area ($x = 80 \to 720$px).
-2. **Obstacles:**
-   * 4 vertical scanning firewall laser beams moving vertically with predictable, harmonic sinusoidal speeds.
-   * 2 horizontal packet-scrubber drones moving back and forth across safe gaps.
-3. **Collision & Life Handling:**
-   * Continuous AABB collision checks between player ($20\times20$px) and moving hazard boxes.
-   * Collision triggers a 200ms red screen flash, audio buzzer, -250 pts, and loss of 1 life.
-   * Player avatar instantly resets to the Start Zone safe buffer.
-   * If remaining lives = 0: Game Over triggers immediately.
-4. Reaching the Goal Zone successfully clears Level 4.
+#### Core Gameplay & Navigation Mechanics:
+1. **Multi-Lane Free 2D Movement ($800 \times 450$px Canvas):**
+   * **Start Safe Buffer ($x = 0 \to 80$px):** Spawn point $(x: 40, y: 225)$, completely protected from all hazard paths.
+   * **Sector 1 Active Corridor ($x = 80 \to 380$px):** Multi-lane conduit featuring Top, Mid, and Bottom lane choices with alternating timing windows.
+   * **Midpoint Safe Island ($x = 380 \to 420$px):** Permanent energy-shielded transit haven. Crossing $x \ge 390$px arms the Checkpoint $(x: 400, y: 225)$ without restoring lives.
+   * **Sector 2 Active Gauntlet ($x = 420 \to 720$px):** Advanced hazard intersection with divergent high-speed vs. synchronized lane options.
+   * **Extraction Goal Zone ($x \ge 720$px):** Pulsing cyan extraction gate ($x \ge 730$px completes the level).
+2. **4-State Deterministic Hazard Model:**
+   * `SAFE`: Translucent cyan wireframe (walkable / non-lethal).
+   * `WARNING`: Amber chevrons + sound chime + guide emitter glow (pre-fire telegraph).
+   * `ACTIVE`: Electric red energy beam/drone (lethal).
+   * `COOLDOWN`: Dissipating orange energy arcs (non-lethal).
+3. **5 Mechanically Distinct Authored Variants:**
+   * `v1_timing_gates`: Staggered rhythmic pulse barriers across conduit lanes.
+   * `v2_patrol_drones`: Waypoint-patrolling scrubber sentinels with directional headlights.
+   * `v3_crossfire_beams`: Harmonically oscillating sweeping lasers with sinusoidal speed.
+   * `v4_packet_storms`: High-density packet stream bursts across vertical lanes.
+   * `v5_master_gauntlet`: Integrated deep inspection gauntlet combining all hazard systems.
+4. **Collision, Safe Respawn & Invulnerability:**
+   * Hitbox: Fair $16 \times 16$px collision box centered inside $20 \times 20$px diamond avatar.
+   * On collision: Single-shot -250 pts penalty and 1 life deducted via GameManager `onLoseLife()`.
+   * Respawn: Player instantly resets to active Checkpoint (Spawn or Midpoint Island) with 1.2s post-respawn invulnerability window.
+5. **Lifecycle & Retry Consistency:**
+   * Level retry preserves exact variant index, resets checkpoint to spawn, and re-arms full 60s timer.
 
 ---
 
-### LEVEL 5 — SYSTEM OVERRIDE
-* **Cyber Metaphor:** Executing the master override sequence on the root kernel terminal to initiate system escape.
+### LEVEL 5 — SYSTEM OVERRIDE / ROOT KERNEL
+* **Cyber Metaphor:** Executing the master override sequence on the collapsing root kernel terminal to breach containment and escape the sandbox.
 * **Duration:** 90 Seconds.
-* **Base Score:** 2,500 pts (+25 pts per remaining second) + (Surviving Lives × 500).
-* **Max Error Tolerance:** 3 wrong sequences before security lockdown (-1 life, resets override stages).
+* **Base Score:** 2,500 pts (+25 pts per remaining second) + (Surviving Lives × 500 pts).
+* **Max Error Tolerance:** 3 cumulative major stage failures before security lockdown (-1 life, resets override to Stage 1 with full 90s timer).
 
-#### Gameplay Mechanics:
-The override requires clearing **3 consecutive intuitive protocol stages**:
-1. **Stage 1 (Sequence Echo):**
-   * A 4-node terminal matrix (`[ALPHA]`, `[BETA]`, `[GAMMA]`, `[DELTA]`) flashes a 4-step sequence with sound tones.
-   * Player reproduces the sequence by clicking the buttons.
-2. **Stage 2 (Port Frequency Balancing):**
-   * Two slider controls: `CARRIER FREQUENCY` and `BUFFER OFFSET`.
-   * Display shows target frequency (e.g., `TARGET: 75 MHz`) and current frequency readout.
-   * Player slides controls into the designated target zone (within $\pm 3$ tolerance) and clicks **SYNCHRONIZE**.
-3. **Stage 3 (Core Disconnect Trigger):**
-   * A dynamic calibration bar oscillates left-and-right across a gauge with a central green sweet-spot.
-   * Player taps the master **DISCONNECT SYSTEM** button when the indicator is inside the green target zone.
-4. **Completion:** Clearing Stage 3 halts all timers, plays the terminal escape animation ("ROOT ACCESS RESTORED — ESCAPE COMPLETED"), and transitions to the **Victory Screen**.
+#### Gameplay Mechanics & Connected 3-Stage Climax:
+1. **Stage 1 (Access Pathway Recall):**
+   - Meaningful Node Matrix: `[ALPHA / KERNEL]`, `[BETA / BUFFER]`, `[GAMMA / CIPHER]`, `[DELTA / ROOT]`.
+   - Flashes an authentic 4-to-5 step harmonic sequence with audio tones.
+   - Reproducing the sequence channels power into the core and unlocks Stage 2.
+2. **Stage 2 (Parameter Coherence Tuning — Zero Answer Leaks):**
+   - Dual rotary/slider controls: `CARRIER FREQUENCY` (20–150 MHz) and `BUFFER OFFSET` (32–512 KB).
+   - Target numbers are strictly internal. Player observes live **Kernel Coherence %** and **Harmonic Waveform** smoothing towards resonance.
+   - Locking parameters at $\ge 95\%$ stability feeds power into the disconnect capacitor.
+3. **Stage 3 (Timed Disconnect Execution):**
+   - 4-State Harmonic Sweep Gauge: `WAITING` $\to$ `APPROACHING` $\to$ `OPTIMAL WINDOW` $\to$ `MISSED`.
+   - Player taps `[EXECUTE EMERGENCY DISCONNECT]` while the oscillating needle is aligned within the highlighted green sweet spot.
+4. **Final Escape Sequence & Victory Presentation:**
+   - Breaches containment: `"ROOT ACCESS REVOKED // CONTAINMENT FAILURE // EXTERNAL CHANNEL CONNECTED // ESCAPE VECTOR OPEN // MISSION COMPLETE"`.
+   - Transitions to the dedicated **Mission Accomplished Screen** displaying Player Name, Final Score, Remaining Lives, Elapsed Time, and Performance Rating (`CYBER SPECTRE`, `NETWORK OPERATIVE`, `SURVIVOR`).
 
 ---
 

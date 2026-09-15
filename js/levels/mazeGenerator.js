@@ -459,6 +459,7 @@ export function generateMazeVariant(baseTemplate, rawSeed, previousVariant = nul
  * In-memory recent run history (not persistent across page reload, prevents immediate duplicates)
  */
 const recentRunHistory = [];
+const recentTemplateHistory = [];
 
 /**
  * Record a run to history
@@ -482,6 +483,43 @@ export function recordRun(templateId, seed) {
 export function isRecentRun(templateId, seed) {
   const seedHex = typeof seed === 'number' ? formatSeedHex(seed) : String(seed).toUpperCase();
   return recentRunHistory.some(r => r.templateId === templateId && r.seed === seedHex);
+}
+
+/**
+ * Record a template to recent history
+ * @param {string} templateId
+ */
+export function recordTemplate(templateId) {
+  if (!templateId) return;
+  recentTemplateHistory.unshift(templateId);
+  if (recentTemplateHistory.length > 3) {
+    recentTemplateHistory.pop();
+  }
+}
+
+/**
+ * Check if template was recently used
+ * @param {string} templateId
+ * @returns {boolean}
+ */
+export function isRecentTemplate(templateId) {
+  return recentTemplateHistory.includes(templateId);
+}
+
+/**
+ * Clear template history
+ */
+export function clearTemplateHistory() {
+  recentTemplateHistory.length = 0;
+}
+
+/**
+ * Clear all recent run and template history
+ */
+export function clearRunHistory() {
+  recentRunHistory.length = 0;
+  recentTemplateHistory.length = 0;
+  lastGeneratedVariant = null;
 }
 
 /**

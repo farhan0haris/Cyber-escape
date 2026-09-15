@@ -16,6 +16,8 @@ import {
   generateRunSeed,
   recordRun,
   isRecentRun,
+  recordTemplate,
+  isRecentTemplate,
   getLastGeneratedVariant,
   setLastGeneratedVariant,
   formatSeedHex,
@@ -44,10 +46,23 @@ export class Level2 {
       let templateIdx = 0;
       if (typeof options.variantIndex === 'number' && LEVEL2_VARIANTS[options.variantIndex]) {
         templateIdx = options.variantIndex;
+      } else if (options.variantId) {
+        const foundIdx = LEVEL2_VARIANTS.findIndex(v => v.id === options.variantId);
+        templateIdx = foundIdx !== -1 ? foundIdx : 0;
+      } else if (options.seed) {
+        // Deterministic template derived from explicit developer seed
+        const seedInt = normalizeSeed(options.seed);
+        templateIdx = seedInt % LEVEL2_VARIANTS.length;
       } else {
-        templateIdx = Math.floor(Math.random() * LEVEL2_VARIANTS.length);
+        // Avoid immediate template repetition
+        const availableTemplates = LEVEL2_VARIANTS.filter(v => !isRecentTemplate(v.id));
+        const pool = availableTemplates.length > 0 ? availableTemplates : LEVEL2_VARIANTS;
+        const chosen = pool[Math.floor(Math.random() * pool.length)];
+        templateIdx = LEVEL2_VARIANTS.findIndex(v => v.id === chosen.id);
+        if (templateIdx === -1) templateIdx = 0;
       }
       const baseTemplate = LEVEL2_VARIANTS[templateIdx];
+      recordTemplate(baseTemplate.id);
 
       // Handle seed
       const prevVariant = getLastGeneratedVariant();

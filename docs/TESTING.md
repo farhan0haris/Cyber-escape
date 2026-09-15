@@ -18,7 +18,7 @@ This document defines the testing methodology, categories, verification plans, a
 ---
 
 ## 2. Test Case Template Format
-Each test case uses the standardized college project QA structure:
+Each test case uses a standardized project QA structure:
 * **Test Case ID:** Unique identifier (e.g., `TC-001`)
 * **Feature Area:** Module or component being tested
 * **Description:** Goal of the test
@@ -40,7 +40,7 @@ Each test case uses the standardized college project QA structure:
 | **TC-004** | Level 1 | Submit incorrect password | Level 1 active | 1. Enter invalid password "WRONG123".<br>2. Click "AUTHORIZE". | "ACCESS DENIED" warning displayed; attempts count decrements by 1; score penalized by 150 points. | Verified: Incorrect submission updates attempt pips, deducts 150 pts penalty via ScoreManager, and displays error feedback. | **PASS** |
 | **TC-005** | Level 2 | Player movement via WASD and Arrow Keys | Level 2 active | 1. Press 'D' or Right Arrow key.<br>2. Press 'S' or Down Arrow key. | Player avatar moves smoothly right and down in the digital maze canvas without lag. | *Pending Phase 5 Implementation* | *PENDING* |
 | **TC-006** | Level 2 | Maze wall collision detection | Level 2 active | 1. Navigate avatar directly into adjacent wall obstacle. | Player avatar stops at wall boundary; cannot pass through or glitch inside wall. | *Pending Phase 5 Implementation* | *PENDING* |
-| **TC-007** | Level 3 | Identify authentic key vs decoy | Level 3 active | 1. Inspect chip cards.<br>2. Click on a decoy card.<br>3. Locate and click authentic AES key. | Clicking decoy causes error notice and deducts 5s + 100pts; clicking authentic key unlocks level transition. | *Pending Phase 6 Implementation* | *PENDING* |
+| **TC-007** | Level 3 | Identify authentic key vs decoy | Level 3 active | 1. Inspect chip cards.<br>2. Click on a decoy card.<br>3. Run comparator diff and correlate records.<br>4. Locate and verify authentic AES key. | Clicking decoy causes error notice and deducts 5s + 100pts; clicking authentic key unlocks level transition with key extraction sequence. | Verified: Level 3 workbench with comparator, correlation, evidence-gated triage, and authentic key extraction sequence passes all LEVEL3-001 through LEVEL3-073 tests. | **PASS** |
 | **TC-008** | Level 4 | Firewall collision and reset | Level 4 active | 1. Guide avatar into a sweeping firewall beam. | Screen flashes red; 1 life deducted; avatar resets to start buffer zone; score penalized by 250pts. | *Pending Phase 7 Implementation* | *PENDING* |
 | **TC-009** | Life System | Lives reaching zero triggers Game Over | Level 4 active with 1 life remaining | 1. Collide with firewall obstacle. | Lives counter reaches 0; Game Over modal immediately appears with "TRY AGAIN" button; inputs freeze. | *Pending Phase 7 Implementation* | *PENDING* |
 | **TC-010** | Game Lifecycle | Pause game during active level | Any level active | 1. Press 'P' or 'Escape' key or click Pause button on HUD. | Pause modal appears; timer stops counting down; player avatar and hazard movements freeze. | Verified: 'P' or Pause button freezes delta timer, pauses LevelManager, and renders accessible Pause modal dialog. | **PASS** |
@@ -231,5 +231,70 @@ During each development phase, test cases are validated and recorded above. In P
 | **DEV-013** | Resource Safety | No duplicate event listeners after level switching | Previous level listeners and cleanup hooks are popped and drained | **PASS** |
 | **DEV-014** | Leaderboard Safety | Developer test sessions cannot pollute leaderboard | Test sessions flagged `isDevSession: true` reject score submission | **PASS** |
 | **DEV-015** | Production Safety | DEV_MODE=false completely disables developer access | `DEV_MODE = false` blocks `startDevLevel()` and omits all dev UI | **PASS** |
+
+---
+
+## 9. Scenario & Variant Variation Test Suite (VAR-001 -> VAR-014)
+
+| Test ID | Test Category | Description | Verification Condition | Status |
+|---|---|---|---|---|
+| **VAR-001** | Level 1 Variation | Consecutive new runs vary | Two consecutive new runs select different Level 1 scenarios | **PASS** |
+| **VAR-002** | Level 1 Distribution | Non-deterministic spread | Across 20 new runs, multiple distinct scenarios appear (≥3 distinct) | **PASS** |
+| **VAR-003** | Level 1 History | Immediate repetition avoided | Session history prevents adjacent new runs from repeating identical scenario | **PASS** |
+| **VAR-004** | Level 1 Retry | Scenario preserved on retry | Retrying Level 1 preserves the exact same scenario and expected answer | **PASS** |
+| **VAR-005** | Game Restart | Restart generates new runId | Restarting game generates fresh `runId` and resets session state | **PASS** |
+| **VAR-006** | Level 1 Dev Override | Developer scenario parameter | `options: { scenarioIndex: 2 }` or `scenarioId` forces exact scenario | **PASS** |
+| **VAR-007** | Level 2 Variation | Consecutive new runs vary seeds | Two consecutive new Level 2 runs produce distinct seeds | **PASS** |
+| **VAR-008** | Level 2 Variation | Meaningful maze differences | Two consecutive new Level 2 runs produce distinct templates/grids | **PASS** |
+| **VAR-009** | Level 2 Retry | Seed preserved on retry | Level 2 retry retains exact same `seedHex` | **PASS** |
+| **VAR-010** | Level 2 Retry | Maze variant preserved on retry | Level 2 retry retains exact same base template, grid, and hazards | **PASS** |
+| **VAR-011** | Game Restart | Level 2 restart run identity | Restarting game generates fresh `runId` for subsequent Level 2 runs | **PASS** |
+| **VAR-012** | Level 2 Distribution | Non-deterministic spread | Across 20 new runs, multiple distinct base templates appear | **PASS** |
+| **VAR-013** | Level 2 Dev Override | Developer seed reproduction | Providing seed parameter reproduces exact identical maze and seedHex | **PASS** |
+| **VAR-014** | Level 2 Retry Integrity | Retry does not mutate geometry | Retrying does not rerun procedural generation | **PASS** |
+
+---
+
+## 10. Phase 7 Level 4: Firewall Dodge (Packet Inspection Corridor) Test Suite
+
+The following automated and manual tests validate Level 4 multi-lane canvas navigation, 4-state hazard telegraphing, 5 distinct authored variants, single-shot collision handling, safe respawn checkpoints, mobile Pointer D-pad controls, lifecycle handling, and scoring (`tests/level4.test.js`):
+
+| Test ID | Test Category | Description | Verification Condition | Status |
+|---|---|---|---|---|
+| **LEVEL4-001** | Lifecycle | Level initializes correctly | Sets player pos $(40, 225)$, 60s timer metadata, default flags | **PASS** |
+| **LEVEL4-002** | Variants | 5 authored variants exist | `LEVEL4_VARIANTS.length === 5`, all pass schema validation | **PASS** |
+| **LEVEL4-003** | Safety | Start buffer is 100% safe | No hazard path intersects $x \in [0, 80]$ px | **PASS** |
+| **LEVEL4-004** | Reachability | Extraction zone is reachable | Extraction zone spans $x \in [720, 800]$ px | **PASS** |
+| **LEVEL4-005** | Physics | Linear velocity update | Moving right for 1.0s advances $x$ by $220 \pm 1$ px | **PASS** |
+| **LEVEL4-006** | Physics | Velocity normalization | Diagonal speed equals orthogonal speed ($220 \times 1/\sqrt{2}$) | **PASS** |
+| **LEVEL4-007** | Boundary | Canvas edge clamping | Player clamped within $[0, 780] \times [0, 430]$ | **PASS** |
+| **LEVEL4-008** | Collision | Active hazard collision | Hitbox overlap with `ACTIVE` hazard registers hit | **PASS** |
+| **LEVEL4-009** | Life Rule | Exactly 1 life lost per hit | `callbacks.onLoseLife` called once per collision event | **PASS** |
+| **LEVEL4-010** | Telegraph | Hazards follow 4-state cycle | `SAFE` $\to$ `WARNING` $\to$ `ACTIVE` $\to$ `COOLDOWN` transitions verified | **PASS** |
+| **LEVEL4-011** | Checkpoint | Safe Island activates checkpoint | Reaching $x \ge 390$ sets checkpoint to $(400, 225)$ | **PASS** |
+| **LEVEL4-012** | Respawn | Collision returns to checkpoint | Hit resets player to spawn (or checkpoint) | **PASS** |
+| **LEVEL4-013** | Determinism | Hazards deterministic at $t$ | Identical simulation clock $t$ gives identical hazard coordinates | **PASS** |
+| **LEVEL4-014** | Pause | Pause freezes loop & hazards | Input cleared, RAF stopped, coordinates preserved | **PASS** |
+| **LEVEL4-015** | Resume | Resume avoids delta jump | Timestamp re-anchored on resume; no instantaneous hazard warp | **PASS** |
+| **LEVEL4-016** | Timer | Starts with 60 seconds | `LEVEL_METADATA[4].durationSeconds === 60` | **PASS** |
+| **LEVEL4-017** | Timeout | Timer 0 triggers life loss | 0s remaining fires `onLoseLife` via GameManager | **PASS** |
+| **LEVEL4-018** | Retry | Retry preserves variant | Variant index preserved; checkpoint reset to spawn | **PASS** |
+| **LEVEL4-019** | Teardown | Cleanup unbinds listeners & RAF | Zero lingering event listeners or active animation frames | **PASS** |
+| **LEVEL4-020** | Completion | Extraction gate clears level | Overlapping $x \ge 730$ triggers `callbacks.onComplete` | **PASS** |
+| **LEVEL4-021** | Scoring | Score formula precision | Score equals $\max(0, 2000 + (\text{time} \times 20) - (\text{penalties}))$ | **PASS** |
+| **LEVEL4-022** | Mobile | Virtual D-Pad controls | Pointer events dispatch directional movement | **PASS** |
+| **LEVEL4-023** | Mobile | `touch-action: none` | Viewport & controls prevent browser gesture zoom/scroll | **PASS** |
+| **LEVEL4-024** | Dev Mode | Direct variant launch | `?dev=1&level=4&variant=X` launches target variant | **PASS** |
+| **LEVEL4-025** | Accessibility | Reduced motion support | Flashes dampened when `prefers-reduced-motion` is active | **PASS** |
+| **LEVEL4-026** | Route Choice | Multiple vertical lanes exist | Every variant has at least 2 distinct navigable $y$-lane paths | **PASS** |
+| **LEVEL4-027** | Onboarding | Safe learning opening | First 3.0s / first hazard provides generous reaction window | **PASS** |
+| **LEVEL4-028** | Telegraph | Visual warning precedes damage | Warning duration $\ge 0.6$s before any hazard becomes lethal | **PASS** |
+| **LEVEL4-029** | Anti-Glitches | Penalty applied once per collision | Lingering in hazard does not multiply 250 penalty | **PASS** |
+| **LEVEL4-030** | Safe Respawn | Respawn never occurs in hazard | Spawn $(40, 225)$ and Checkpoint $(400, 225)$ have 0 hazard overlap | **PASS** |
+| **LEVEL4-031** | Distinctness | Variants mechanically distinct | V1 timing $\neq$ V2 patrol $\neq$ V3 crossfire $\neq$ V4 storm $\neq$ V5 gauntlet | **PASS** |
+| **LEVEL4-032** | Fair Budget & Pacing | Completable in 30–40s / 60s limit | Intended route traversable in 30–40s under active play, fitting within 60s limit | **PASS** |
+| **LEVEL4-033** | Checkpoint | Checkpoint retains position | Hit after midpoint respawns at $(400, 225)$, not $(40, 225)$ | **PASS** |
+| **LEVEL4-034** | Idempotence | No duplicate life-loss triggers | Rapid hazard overlap cannot fire `onLoseLife` multiple times | **PASS** |
+
 
 

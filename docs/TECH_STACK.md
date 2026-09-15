@@ -33,17 +33,17 @@ This document specifies the technical stack, runtime environments, storage mecha
 
 ## 3. Technology Boundaries (What NOT to Use)
 
-To maintain high code quality, accessibility, zero runtime friction, and meet the specific criteria of a college mini-project, the following technologies are **strictly prohibited** unless explicitly requested:
+To maintain high code quality, accessibility, zero runtime friction, and lightweight architecture, the following technologies are **strictly prohibited** unless explicitly requested:
 
 1. **No Heavy Frontend Frameworks:**
    * Do NOT use React, Vue, Angular, Svelte, or Next.js.
-   * *Reason:* Adds unnecessary bundle size, build pipelines, and abstraction layers for a 2D arcade/puzzle mini-project.
+   * *Reason:* Adds unnecessary bundle size, build pipelines, and abstraction layers for a 2D arcade/puzzle experience.
 2. **No CSS Frameworks / Utilities:**
    * Do NOT use Tailwind CSS, Bootstrap, or Bulma.
    * *Reason:* Vanilla CSS design tokens provide a much cleaner, bespoke cybersecurity aesthetic without hundreds of utility classes cluttering HTML nodes.
 3. **No Heavy Game Engines:**
-   * Do NOT use Phaser.js, Three.js, Pixi.js, or Babylon.js.
-   * *Reason:* HTML5 Canvas 2D and modern DOM are more than sufficient for 2D mazes, puzzle matrices, and obstacle avoidance, while dramatically simplifying academic code evaluation.
+   * Do NOT use Phaser.js, Pixi.js, or Babylon.js.
+   * *Reason:* HTML5 Canvas 2D and modern DOM are more than sufficient for 2D mazes, puzzle matrices, and obstacle avoidance, while maintaining clean code transparency.
 4. **No Mandatory Backend Server:**
    * Do NOT require Node.js Express, Python Flask, or PHP servers for core gameplay.
    * *Reason:* Must run directly as a static client application that can be opened via `file://` or any static web server.
@@ -72,7 +72,7 @@ To maintain high code quality, accessibility, zero runtime friction, and meet th
 
 Because **Cyber Escape** has zero build step requirements, it is a pure static web app that can be deployed instantly to any static host:
 
-### Option A: GitHub Pages (Recommended for College Project)
+### Option A: GitHub Pages (Recommended for Static Hosting)
 * **Configuration:** Serve directly from repository root (`/`) or `/docs` on the `main` branch.
 * **Cost:** Free, automatic SSL certificate, integrated into GitHub.
 

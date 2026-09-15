@@ -35,7 +35,7 @@ export const LEVEL_METADATA = Object.freeze({
     type: 'DECOY FILTER',
     objective: 'SECTOR 03: MEMORY DUMP // ISOLATE AUTHENTIC DECRYPTION KEY',
     standbyObjective: 'SECTOR 03: AWAITING MEMORY CLUSTER INSPECTION',
-    durationSeconds: 60,
+    durationSeconds: 75,
     baseScore: 1200,
     timeBonusMultiplier: 15,
     description: 'Inspect 12 cryptographic memory chips and isolate the authentic AES decryption key.'

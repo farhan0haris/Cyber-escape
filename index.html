@@ -19,6 +19,9 @@
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/level1.css">
   <link rel="stylesheet" href="css/level2.css">
+  <link rel="stylesheet" href="css/level3.css">
+  <link rel="stylesheet" href="css/level4.css">
+  <link rel="stylesheet" href="css/level5.css">
 </head>
 <body>
   <!-- Layered Cyber Atmosphere Layers -->
@@ -70,16 +73,18 @@
           </div>
 
           <!-- Environmental Command Log -->
-          <div class="terminal-log-panel" aria-label="Virtual System Command Feed">
+          <div class="terminal-log-panel" aria-label="Virtual System Command Feed" id="main-terminal-panel">
             <div class="terminal-log-header">
               <span class="terminal-header-title font-mono">&gt; ROOT CONSOLE FEED</span>
               <span class="terminal-header-badge font-mono text-emerald">LIVE TELEMETRY</span>
             </div>
-            <div class="terminal-log-body font-mono" id="terminal-command-log">
+            <div class="terminal-log-body font-mono" id="terminal-command-log" tabindex="0" role="region" aria-label="Interactive Terminal Log">
               <div class="log-line">&gt; [SYS_INIT] Initializing containment sandbox kernel...</div>
               <div class="log-line">&gt; [AUTH] Security watchdog engaged on subroutines 01–05.</div>
               <div class="log-line">&gt; [STATUS] 5-layer encrypted security perimeter active.</div>
-              <div class="log-line log-cursor-line">&gt; <span class="text-cyan">Awaiting operator credentials to execute escape protocol...</span><span class="terminal-cursor">_</span></div>
+              <div class="log-line log-cursor-line" id="main-terminal-cursor-line">
+                &gt; <span class="text-cyan" id="main-terminal-prompt-text">Awaiting operator input</span><span id="main-terminal-cmd-input" class="text-emerald" style="font-weight:700;"></span><span class="terminal-cursor">_</span>
+              </div>
             </div>
           </div>
 
@@ -209,7 +214,6 @@
           <!-- Controls -->
           <div class="hud-controls">
             <button id="btn-pause-game" class="btn btn-sm btn-secondary" type="button" aria-label="Pause Game">PAUSE [P]</button>
-            <button id="btn-restart-game" class="btn btn-sm btn-danger" type="button" aria-label="Restart Mission">RESTART</button>
           </div>
         </div>
 
@@ -423,7 +427,7 @@
           </div>
           <div class="about-field">
             <span class="field-label font-mono text-muted">PROJECT TYPE</span>
-            <p>College Mini-Project // Interactive Cybersecurity Browser Escape Room</p>
+            <p>Experimental Interactive Cybersecurity Browser Escape Room</p>
           </div>
           <div class="about-field">
             <span class="field-label font-mono text-muted">APPROVED TECHNOLOGY STACK</span>
@@ -437,7 +441,7 @@
           </div>
           <div class="about-field">
             <span class="field-label font-mono text-muted">ENGINEERING CREDITS</span>
-            <p class="font-mono text-emerald" style="font-size: 0.875rem;">[Student / Engineering Development Team]</p>
+            <p class="font-mono text-emerald" style="font-size: 0.875rem;">Cyber Escape Engineering &amp; Design</p>
           </div>
         </div>
         <div class="modal-footer">
@@ -456,8 +460,29 @@
           <p style="margin-bottom: 20px;">Execution suspended. Countdown timers and security hazard loops are frozen.</p>
           <div style="display: flex; flex-direction: column; gap: 10px;">
             <button id="btn-resume-game" class="btn btn-primary" type="button">RESUME EXECUTION</button>
-            <button id="btn-pause-restart" class="btn btn-danger" type="button">RESTART MISSION</button>
-            <button id="btn-quit-menu" class="btn btn-secondary" type="button">QUIT TO MAIN MENU</button>
+            <button id="btn-quit-menu" class="btn btn-danger" type="button">QUIT MISSION</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 5B: QUIT CONFIRMATION OVERLAY -->
+    <div id="modal-quit-confirm" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="quit-confirm-title">
+      <div class="modal-content cyber-corner-brackets" style="max-width: 460px; text-align: center; border-top-color: var(--danger);">
+        <div class="modal-header" style="justify-content: center; flex-direction: column; gap: 4px;">
+          <span class="modal-badge font-mono text-red">ABORT OPERATION PROTOCOL</span>
+          <h2 id="quit-confirm-title" class="modal-title text-red">ABORT CURRENT MISSION?</h2>
+        </div>
+        <div class="modal-body">
+          <p style="margin-bottom: 12px; font-weight: 600; color: var(--text-primary);">
+            Your current run progress will be lost.
+          </p>
+          <p style="font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 20px;">
+            Sector clearance and score will not be recorded to the escape archives. The active operation will terminate immediately.
+          </p>
+          <div style="display: flex; gap: 12px; justify-content: center;">
+            <button id="btn-quit-cancel" class="btn btn-secondary" type="button" style="flex: 1;">CANCEL</button>
+            <button id="btn-quit-confirm" class="btn btn-danger" type="button" style="flex: 1;">QUIT MISSION</button>
           </div>
         </div>
       </div>
@@ -491,6 +516,49 @@
           <div style="display: flex; flex-direction: column; gap: 10px;">
             <button id="btn-game-over-restart" class="btn btn-primary" type="button">RETRY MISSION</button>
             <button id="btn-game-over-menu" class="btn btn-secondary" type="button">RETURN TO MAIN MENU</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 7: MISSION VICTORY / ESCAPE OVERLAY -->
+    <div id="modal-victory" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="victory-title">
+      <div class="modal-content cyber-corner-brackets" style="max-width: 520px; text-align: center; border-top-color: var(--neon-emerald);">
+        <div class="modal-header" style="justify-content: center; flex-direction: column; gap: 4px;">
+          <span class="modal-badge font-mono text-emerald">CONTAINMENT BREACH COMPLETE</span>
+          <h2 id="victory-title" class="modal-title text-emerald" style="font-size: 1.45rem;">MISSION ACCOMPLISHED // ESCAPED</h2>
+        </div>
+        <div class="modal-body">
+          <div class="game-over-cause-badge font-mono text-cyan" id="victory-player-badge" style="margin-bottom: 16px; font-size: 0.9rem;">
+            AGENT OPERATOR // ROOT OVERRIDE GRANTED
+          </div>
+          <div class="game-over-stats-grid font-mono" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px;">
+            <div class="telemetry-card">
+              <span class="card-label">TOTAL SCORE</span>
+              <span class="card-val text-cyan" id="victory-score">00000</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="card-label">SECTORS CLEARED</span>
+              <span class="card-val text-emerald" id="victory-sectors">5 / 5</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="card-label">TOTAL TIME</span>
+              <span class="card-val text-amber" id="victory-time">00:00</span>
+            </div>
+          </div>
+          <div class="game-over-stats-grid font-mono" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 20px;">
+            <div class="telemetry-card">
+              <span class="card-label">SURVIVING INTEGRITY</span>
+              <span class="card-val text-emerald" id="victory-lives">3 NODES</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="card-label">PERFORMANCE RATING</span>
+              <span class="card-val text-cyan" id="victory-rating">CYBER SPECTRE</span>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button id="btn-victory-restart" class="btn btn-primary" type="button">NEW OPERATION</button>
+            <button id="btn-victory-menu" class="btn btn-secondary" type="button">RETURN TO MAIN MENU</button>
           </div>
         </div>
       </div>

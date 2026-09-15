@@ -30,7 +30,9 @@ export class UIManager {
       modalLeaderboard: getEl('modal-leaderboard'),
       modalAbout: getEl('modal-about'),
       modalPause: getEl('modal-pause'),
+      modalQuitConfirm: getEl('modal-quit-confirm'),
       modalGameOver: getEl('modal-game-over'),
+      modalVictory: getEl('modal-victory'),
 
       // Input & Error
       playerNameInput: getEl('player-name-input'),
@@ -43,7 +45,15 @@ export class UIManager {
       goCause: getEl('game-over-cause'),
       goScore: getEl('game-over-score'),
       goSectors: getEl('game-over-sectors'),
-      goTime: getEl('game-over-time')
+      goTime: getEl('game-over-time'),
+
+      // Victory elements
+      vicPlayerBadge: getEl('victory-player-badge'),
+      vicScore: getEl('victory-score'),
+      vicSectors: getEl('victory-sectors'),
+      vicTime: getEl('victory-time'),
+      vicLives: getEl('victory-lives'),
+      vicRating: getEl('victory-rating')
     };
 
     this._commandLogInterval = null;
@@ -213,6 +223,49 @@ export class UIManager {
       this.elements.goTime.textContent = `${String(totalMins).padStart(2, '0')}:${String(totalSecs).padStart(2, '0')}`;
     }
     this.showModal('modal-game-over');
+  }
+
+  /**
+   * Show Mission Victory modal with complete performance rating
+   * @param {Object} state
+   */
+  showVictory(state) {
+    const playerName = state.playerName || 'OPERATOR';
+    const finalScore = state.score || 0;
+    const lives = typeof state.lives === 'number' ? state.lives : 3;
+    const totalTime = state.totalTimeElapsed || 0;
+
+    if (this.elements.vicPlayerBadge) {
+      this.elements.vicPlayerBadge.textContent = `AGENT ${playerName.toUpperCase()} // ROOT OVERRIDE GRANTED`;
+    }
+    if (this.elements.vicScore) {
+      this.elements.vicScore.textContent = String(finalScore).padStart(5, '0');
+    }
+    if (this.elements.vicSectors) {
+      this.elements.vicSectors.textContent = '5 / 5 SECTORS';
+    }
+    if (this.elements.vicTime) {
+      const totalMins = Math.floor(totalTime / 60);
+      const totalSecs = totalTime % 60;
+      this.elements.vicTime.textContent = `${String(totalMins).padStart(2, '0')}:${String(totalSecs).padStart(2, '0')}`;
+    }
+    if (this.elements.vicLives) {
+      this.elements.vicLives.textContent = `${lives} ${lives === 1 ? 'NODE' : 'NODES'}`;
+    }
+    if (this.elements.vicRating) {
+      if (lives === 3 && finalScore >= 5000) {
+        this.elements.vicRating.textContent = 'CYBER SPECTRE (ELITE)';
+        this.elements.vicRating.className = 'card-val text-emerald';
+      } else if (lives >= 2) {
+        this.elements.vicRating.textContent = 'NETWORK OPERATIVE';
+        this.elements.vicRating.className = 'card-val text-cyan';
+      } else {
+        this.elements.vicRating.textContent = 'SURVIVOR';
+        this.elements.vicRating.className = 'card-val text-amber';
+      }
+    }
+
+    this.showModal('modal-victory');
   }
 
   /**
