@@ -181,29 +181,11 @@ class App {
       });
     }
 
-    // HUD: Restart Button
-    const btnRestart = document.getElementById('btn-restart-game');
-    if (btnRestart) {
-      btnRestart.addEventListener('click', () => {
-        if (confirm('RESTART MISSION? ALL PROGRESS IN ACTIVE SECTOR WILL BE RESET.')) {
-          this.gameManager.restartGame();
-        }
-      });
-    }
-
     // Pause Modal: Resume Button
     const btnResume = document.getElementById('btn-resume-game');
     if (btnResume) {
       btnResume.addEventListener('click', () => {
         this.gameManager.resumeGame();
-      });
-    }
-
-    // Pause Modal: Restart Mission Button
-    const btnPauseRestart = document.getElementById('btn-pause-restart');
-    if (btnPauseRestart) {
-      btnPauseRestart.addEventListener('click', () => {
-        this.gameManager.restartGame();
       });
     }
 

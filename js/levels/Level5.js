@@ -508,7 +508,7 @@ export class Level5 {
 
   _triggerFinalEscape() {
     this.isCompleted = true;
-    audio.playSuccess();
+    audio.playFinale();
 
     if (typeof document !== 'undefined') {
       const overlay = document.createElement('div');

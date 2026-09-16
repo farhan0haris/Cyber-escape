@@ -86,11 +86,11 @@
 }
 
 .l1-sector-heading {
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
   font-weight: 700;
   color: var(--text-primary);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.02em;
   margin: 0;
 }
 

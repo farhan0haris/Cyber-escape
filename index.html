@@ -6,10 +6,11 @@
   <meta name="description" content="Cyber Escape — A browser-based virtual cybersecurity escape room puzzle and adventure game.">
   <title>Cyber Escape // Virtual Security Protocol</title>
 
-  <!-- Google Fonts Preconnect -->
+  <!-- Distinctive Web Fonts (Hubot Sans Display + Monaspace Neon Technical + Inter UI) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Hubot+Sans:ital,wght@0,400..900;1,400..900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/monaspace-neon@5.0.8/index.css">
 
   <!-- Core Stylesheets -->
   <link rel="stylesheet" href="css/reset.css">
@@ -303,103 +304,173 @@
 
     <!-- MODAL 2: HOW TO PLAY -->
     <div id="modal-how-to-play" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="how-to-play-title">
-      <div class="modal-content cyber-corner-brackets" style="max-width: 640px;">
+      <div class="modal-content cyber-corner-brackets modal-briefing">
         <div class="modal-header">
           <div class="modal-title-group">
             <span class="modal-badge font-mono text-cyan">SECURITY PROTOCOL</span>
-            <h2 id="how-to-play-title" class="modal-title">MISSION BRIEFING & RULES</h2>
+            <h2 id="how-to-play-title" class="modal-title">MISSION BRIEFING &amp; RULES</h2>
           </div>
           <button class="modal-close-btn" data-close-modal type="button" aria-label="Close modal">&times;</button>
         </div>
-        <div class="modal-body briefing-grid">
-          <section class="briefing-card">
-            <h3 class="briefing-card-title text-cyan font-mono">&gt; OBJECTIVE</h3>
-            <p>You are trapped inside a locked computer system. Successfully clear 5 consecutive security sectors before the lockout countdown reaches zero to initiate emergency disconnect.</p>
+
+        <div class="modal-body briefing-body" tabindex="0" role="region" aria-label="Briefing content">
+          <!-- 1. OBJECTIVE -->
+          <section class="briefing-section">
+            <h3 class="briefing-heading font-mono text-cyan">&gt; MISSION OBJECTIVE</h3>
+            <p class="briefing-text">
+              <strong>Cyber Escape</strong> is a tactical cybersecurity escape game. Trapped inside a locked mainframe terminal, you must successfully clear <strong>5 consecutive security sectors</strong> before the countdown timer reaches zero to initiate emergency disconnect.
+            </p>
           </section>
 
-          <section class="briefing-card">
-            <h3 class="briefing-card-title text-cyan font-mono">&gt; FIVE SECTOR PROGRESSION</h3>
-            <div class="briefing-sectors-list font-mono">
-              <div class="briefing-sector-item">
-                <span class="item-num text-cyan">01</span>
-                <span><strong>Firewall Gate:</strong> Deduce the root password hash from forensic clues.</span>
+          <!-- 2. FIVE SECTOR PROGRESSION -->
+          <section class="briefing-section">
+            <h3 class="briefing-heading font-mono text-cyan">&gt; FIVE SECTOR PROGRESSION</h3>
+            <div class="briefing-sectors-compact font-mono">
+              <div class="sector-entry">
+                <span class="sector-badge text-cyan">01</span>
+                <div class="sector-body">
+                  <div class="sector-title-line">
+                    <strong class="sector-name">PASSWORD BREACH</strong>
+                    <span class="sector-tag text-cyan">Forensic deduction</span>
+                  </div>
+                  <p class="sector-desc">Analyze terminal access logs and deduce the root password hash from forensic clues.</p>
+                </div>
               </div>
-              <div class="briefing-sector-item">
-                <span class="item-num text-cyan">02</span>
-                <span><strong>Digital Labyrinth:</strong> Navigate 2D memory grid channels to reach the gateway.</span>
+
+              <div class="sector-entry">
+                <span class="sector-badge text-cyan">02</span>
+                <div class="sector-body">
+                  <div class="sector-title-line">
+                    <strong class="sector-name">DIGITAL MAZE</strong>
+                    <span class="sector-tag text-cyan">Digital navigation</span>
+                  </div>
+                  <p class="sector-desc">Navigate 2D memory grid channels to reach and unlock the security gateway.</p>
+                </div>
               </div>
-              <div class="briefing-sector-item">
-                <span class="item-num text-cyan">03</span>
-                <span><strong>Memory Dump:</strong> Inspect 12 cryptographic chips and filter out false decoys.</span>
+
+              <div class="sector-entry">
+                <span class="sector-badge text-cyan">03</span>
+                <div class="sector-body">
+                  <div class="sector-title-line">
+                    <strong class="sector-name">MEMORY FORENSICS</strong>
+                    <span class="sector-tag text-cyan">Memory investigation</span>
+                  </div>
+                  <p class="sector-desc">Inspect cryptographic memory blocks and filter out corrupt decoys.</p>
+                </div>
               </div>
-              <div class="briefing-sector-item">
-                <span class="item-num text-cyan">04</span>
-                <span><strong>Packet Corridor:</strong> Evade sweeping firewall laser barriers in real time.</span>
+
+              <div class="sector-entry">
+                <span class="sector-badge text-cyan">04</span>
+                <div class="sector-body">
+                  <div class="sector-title-line">
+                    <strong class="sector-name">FIREWALL DODGE</strong>
+                    <span class="sector-tag text-cyan">Real-time evasion</span>
+                  </div>
+                  <p class="sector-desc">Evade sweeping laser barriers, packet hazards, and dynamic firewall surges.</p>
+                </div>
               </div>
-              <div class="briefing-sector-item">
-                <span class="item-num text-cyan">05</span>
-                <span><strong>Root Kernel:</strong> Recall sequence patterns, balance frequencies, and execute override.</span>
+
+              <div class="sector-entry">
+                <span class="sector-badge text-cyan">05</span>
+                <div class="sector-body">
+                  <div class="sector-title-line">
+                    <strong class="sector-name">SYSTEM OVERRIDE</strong>
+                    <span class="sector-tag text-cyan">Final system operation</span>
+                  </div>
+                  <p class="sector-desc">Recall sequence patterns, balance core frequencies, and initiate disconnect.</p>
+                </div>
               </div>
             </div>
           </section>
 
-          <section class="briefing-card">
-            <h3 class="briefing-card-title text-emerald font-mono">&gt; SCORING & BONUSES</h3>
-            <p>Earn base points per completed sector plus a time bonus for each second remaining. Clamped to a minimum of 0 points.</p>
+          <!-- 3. RULES & INTEGRITY -->
+          <section class="briefing-section">
+            <h3 class="briefing-heading font-mono text-cyan">&gt; RULES &amp; INTEGRITY</h3>
+            <div class="briefing-rules-compact font-mono">
+              <div class="rule-item">
+                <span class="rule-bullet text-amber" aria-hidden="true">&#9829;</span>
+                <div class="rule-copy">
+                  <span class="text-amber" style="font-weight: 700;">3 INTEGRITY NODES:</span>
+                  <span>Hazard hits or timeouts lose 1 node &amp; reset the sector. 0 nodes triggers Lockdown.</span>
+                </div>
+              </div>
+              <div class="rule-item">
+                <span class="rule-bullet text-emerald" aria-hidden="true">&#9733;</span>
+                <div class="rule-copy">
+                  <span class="text-emerald" style="font-weight: 700;">SCORING &amp; BONUSES:</span>
+                  <span>Earn base sector clearance points plus a time bonus for each second remaining.</span>
+                </div>
+              </div>
+            </div>
           </section>
 
-          <section class="briefing-card">
-            <h3 class="briefing-card-title text-amber font-mono">&gt; INTEGRITY LIVES & TIMEOUT</h3>
-            <p>Start with <strong>3 Integrity Nodes</strong>. Collisions with hazards or timer expiration deduct 1 node and reset the active sector. Reaching 0 nodes triggers total Lockdown (Game Over).</p>
-          </section>
+          <!-- 4. CONTROLS -->
+          <section class="briefing-section">
+            <h3 class="briefing-heading font-mono text-cyan">&gt; SYSTEM CONTROLS</h3>
+            <div class="briefing-controls-grid">
+              <div class="control-box">
+                <span class="control-box-title font-mono text-cyan">KEYBOARD</span>
+                <div class="control-entry">
+                  <span class="keycaps"><kbd class="keycap">W</kbd><kbd class="keycap">A</kbd><kbd class="keycap">S</kbd><kbd class="keycap">D</kbd> / <kbd class="keycap">&uarr;</kbd><kbd class="keycap">&larr;</kbd><kbd class="keycap">&darr;</kbd><kbd class="keycap">&rarr;</kbd></span>
+                  <span class="control-label">Navigation &amp; Movement</span>
+                </div>
+                <div class="control-entry">
+                  <span class="keycaps"><kbd class="keycap">P</kbd> / <kbd class="keycap">Esc</kbd></span>
+                  <span class="control-label">Pause Game / Dismiss</span>
+                </div>
+                <div class="control-entry">
+                  <span class="keycaps"><kbd class="keycap">Enter</kbd> / <kbd class="keycap">Space</kbd></span>
+                  <span class="control-label">Select / Confirm</span>
+                </div>
+              </div>
 
-          <section class="briefing-card">
-            <h3 class="briefing-card-title text-cyan font-mono">&gt; CONTROLS</h3>
-            <p class="font-mono" style="font-size: 0.8125rem;">
-              <strong>[P] / [Escape]:</strong> Pause Game &bull; 
-              <strong>[WASD] / [Arrows]:</strong> Sector Navigation &bull; 
-              <strong>[Mouse / Tap]:</strong> Terminals & Puzzles
-            </p>
+              <div class="control-box">
+                <span class="control-box-title font-mono text-cyan">MOUSE &amp; TOUCH</span>
+                <div class="control-entry">
+                  <span class="control-tag font-mono">CLICK &amp; DRAG</span>
+                  <span class="control-label">Terminals, chips &amp; sliders</span>
+                </div>
+                <div class="control-entry">
+                  <span class="control-tag font-mono">TOUCH D-PAD</span>
+                  <span class="control-label">Mobile maze movement</span>
+                </div>
+                <div class="control-entry">
+                  <span class="control-tag font-mono">DIRECT TAP</span>
+                  <span class="control-label">Terminal &amp; puzzle input</span>
+                </div>
+              </div>
+            </div>
           </section>
         </div>
+
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" data-close-modal>ACKNOWLEDGED</button>
         </div>
       </div>
     </div>
 
-    <!-- MODAL 3: LEADERBOARD PLACEHOLDER -->
+    <!-- MODAL 3: LEADERBOARD -->
     <div id="modal-leaderboard" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="leaderboard-title">
-      <div class="modal-content cyber-corner-brackets" style="max-width: 580px;">
+      <div class="modal-content cyber-corner-brackets modal-leaderboard">
         <div class="modal-header">
           <div class="modal-title-group">
-            <span class="modal-badge font-mono text-cyan">TOP AGENT ARCHIVES</span>
+            <span class="modal-badge font-mono text-cyan">TOP AGENT ARCHIVES // HALL OF FAME</span>
             <h2 id="leaderboard-title" class="modal-title">ESCAPE LEADERBOARD</h2>
           </div>
           <button class="modal-close-btn" data-close-modal type="button" aria-label="Close modal">&times;</button>
         </div>
-        <div class="modal-body">
-          <div class="leaderboard-shell-container">
-            <div class="leaderboard-header-row font-mono">
-              <span>RANK</span>
-              <span>AGENT CODENAME</span>
-              <span>SCORE</span>
-              <span>TIME</span>
-            </div>
-            <!-- Empty State Shell -->
+        <div class="modal-body leaderboard-body" id="leaderboard-body-container" tabindex="0" role="region" aria-label="Leaderboard rankings">
+          <div id="leaderboard-content" class="leaderboard-content">
+            <!-- Rendered dynamically by ui.renderLeaderboard() -->
             <div class="leaderboard-empty-state">
-              <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
-                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-                <path d="M6 8h.01"></path>
-                <path d="M10 8h.01"></path>
-                <path d="M14 8h.01"></path>
-                <path d="M18 8h.01"></path>
-                <path d="M8 12h8"></path>
-                <path d="M8 16h5"></path>
-              </svg>
-              <h3 class="empty-title font-mono">NO ESCAPE RECORDS ESTABLISHED</h3>
+              <div class="empty-icon-shield" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </div>
+              <h3 class="empty-title font-mono text-cyan">NO VERIFIED RUNS</h3>
               <p class="empty-desc">
-                Complete an unbroken 5-sector override run to register your final score, time, and integrity rating in the archives.
+                Complete a mission to establish a leaderboard record in the system archives.
               </p>
             </div>
           </div>
@@ -412,38 +483,77 @@
 
     <!-- MODAL 4: ABOUT -->
     <div id="modal-about" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="about-title">
-      <div class="modal-content cyber-corner-brackets">
+      <div class="modal-content modal-about cyber-corner-brackets">
         <div class="modal-header">
           <div class="modal-title-group">
-            <span class="modal-badge font-mono text-cyan">SYSTEM SPECIFICATIONS</span>
-            <h2 id="about-title" class="modal-title">PROJECT SPECIFICATIONS</h2>
+            <span class="modal-badge font-mono text-cyan">SYSTEM PROFILE</span>
+            <h2 id="about-title" class="modal-title">ABOUT CYBER ESCAPE</h2>
           </div>
           <button class="modal-close-btn" data-close-modal type="button" aria-label="Close modal">&times;</button>
         </div>
-        <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
-          <div class="about-field">
-            <span class="field-label font-mono text-muted">PROJECT TITLE</span>
-            <p class="font-mono text-cyan" style="font-weight: 700; font-size: 1.125rem;">Cyber Escape</p>
-          </div>
-          <div class="about-field">
-            <span class="field-label font-mono text-muted">PROJECT TYPE</span>
-            <p>Experimental Interactive Cybersecurity Browser Escape Room</p>
-          </div>
-          <div class="about-field">
-            <span class="field-label font-mono text-muted">APPROVED TECHNOLOGY STACK</span>
-            <p class="font-mono" style="font-size: 0.875rem;">HTML5 &bull; CSS3 (Vanilla Tokens) &bull; JavaScript (ES6 Modules) &bull; LocalStorage &bull; Web Audio API</p>
-          </div>
-          <div class="about-field">
-            <span class="field-label font-mono text-muted">ARCHITECTURAL CONSTRAINTS</span>
-            <p style="font-size: 0.875rem;">
-              Built completely without runtime frameworks or build bundlers. Features hardware-accelerated animations, delta-time execution loops, and accessible dialogs.
+
+        <div class="modal-body about-body" tabindex="0" role="region" aria-label="About Cyber Escape Specifications">
+          <!-- Section 1: Identity & Statement -->
+          <div class="about-hero">
+            <div class="about-tagline font-mono text-cyan">
+              <span class="status-dot"></span> EXPERIMENTAL CYBERSECURITY SIMULATION
+            </div>
+            <p class="about-lead">
+              An interactive cybersecurity escape room combining defensive forensic puzzles, incident analysis, network security mechanics, and terminal diagnostics.
             </p>
           </div>
-          <div class="about-field">
-            <span class="field-label font-mono text-muted">ENGINEERING CREDITS</span>
-            <p class="font-mono text-emerald" style="font-size: 0.875rem;">Cyber Escape Engineering &amp; Design</p>
+
+          <div class="about-divider" aria-hidden="true"></div>
+
+          <!-- Section 2: The Idea -->
+          <div class="about-section">
+            <h3 class="about-section-heading font-mono text-cyan">THE CONCEPT</h3>
+            <p class="about-text">
+              Cyber Escape began as an experiment in combining cybersecurity concepts with interactive game mechanics, procedural environments, forensic interfaces, and immersive web visuals.
+            </p>
+          </div>
+
+          <div class="about-divider" aria-hidden="true"></div>
+
+          <!-- Section 3: Technology / Build -->
+          <div class="about-section">
+            <h3 class="about-section-heading font-mono text-cyan">APPROVED TECHNOLOGY STACK</h3>
+            <p class="about-text">
+              Built natively from scratch with zero external UI frameworks or runtime bundlers. Powered by modern web platform standards:
+            </p>
+            <div class="tech-tags">
+              <span class="tech-tag">HTML5</span>
+              <span class="tech-tag">CSS3 (Vanilla Tokens)</span>
+              <span class="tech-tag">JavaScript (ES6 Modules)</span>
+              <span class="tech-tag">WebGL &amp; GLSL Shaders</span>
+              <span class="tech-tag">Canvas 2D API</span>
+              <span class="tech-tag">Web Audio API</span>
+              <span class="tech-tag">LocalStorage API</span>
+            </div>
+          </div>
+
+          <div class="about-divider" aria-hidden="true"></div>
+
+          <!-- Section 4: Specifications & Credits -->
+          <div class="about-section">
+            <h3 class="about-section-heading font-mono text-cyan">SYSTEM METADATA</h3>
+            <div class="about-meta-grid">
+              <div class="meta-item">
+                <span class="meta-label font-mono text-muted">BUILD VERSION</span>
+                <span class="meta-val font-mono text-primary">v1.0.0 // PRODUCTION</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label font-mono text-muted">ARCHITECTURE</span>
+                <span class="meta-val font-mono text-primary">Zero-Dependency Modular ES</span>
+              </div>
+              <div class="meta-item full-width">
+                <span class="meta-label font-mono text-muted">ENGINEERING &amp; DESIGN</span>
+                <span class="meta-val font-mono text-emerald">Cyber Escape Engineering</span>
+              </div>
+            </div>
           </div>
         </div>
+
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-close-modal>CLOSE</button>
         </div>

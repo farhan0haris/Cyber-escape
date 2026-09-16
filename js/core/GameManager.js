@@ -346,8 +346,8 @@ export class GameManager {
 
     this.timer.start(nextMeta.durationSeconds);
 
-    audio.playSuccess();
-    ui.showNotification(`SECTOR 0${currentLevel} CLEARED. ENTERING SECTOR 0${nextLvl}`, 'success');
+    audio.playHandoff();
+    ui.showNotification(`SECTOR 0${currentLevel} OVERRIDDEN. SYSTEM HANDOFF -> SECTOR 0${nextLvl}`, 'success');
   }
 
   /**
@@ -421,8 +421,8 @@ export class GameManager {
     }
 
     gameState.update({ status: 'COMPLETED', isCompleted: true, isPaused: false });
-    audio.playSuccess();
-    ui.showNotification('CONGRATULATIONS: ALL SECTORS OVERRIDDEN // SYSTEM UNLOCKED!', 'success');
+    audio.playFinale();
+    ui.showNotification('ALL SECTORS OVERRIDDEN // ROOT OVERRIDE GRANTED', 'success');
 
     // Show dedicated Victory / Mission Results Screen
     ui.showVictory(gameState.state);

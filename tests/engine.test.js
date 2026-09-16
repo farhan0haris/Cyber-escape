@@ -338,4 +338,44 @@ describe('Phase 3 Core Engine & Lifecycle Tests', () => {
     assert.strictEqual(emittedAction, null, 'Pressing R must NOT emit RESTART action');
     inputMgr.cleanup();
   });
+
+  test('GAME-025: Direct Pause Menu buttons verification', async () => {
+    const fs = await import('node:fs');
+    const path = await import('node:path');
+    const htmlPath = path.join(import.meta.dirname, '..', 'index.html');
+    const html = fs.readFileSync(htmlPath, 'utf-8');
+
+    const pauseModalMatch = html.match(/id="modal-pause"[\s\S]*?<\/div>\s*<\/div>\s*<\/div>/);
+    assert.ok(pauseModalMatch, 'modal-pause must exist in index.html');
+    const pauseHtml = pauseModalMatch[0];
+
+    // Find all button tags inside modal-pause
+    const buttonMatches = pauseHtml.match(/<button[^>]*>([\s\S]*?)<\/button>/g) || [];
+    assert.strictEqual(buttonMatches.length, 2, 'Pause modal must contain EXACTLY 2 buttons');
+
+    // Button 1: RESUME EXECUTION
+    assert.ok(buttonMatches[0].includes('btn-resume-game'), 'Button 1 must be #btn-resume-game');
+    assert.ok(buttonMatches[0].includes('RESUME EXECUTION'), 'Button 1 text must be RESUME EXECUTION');
+
+    // Button 2: QUIT MISSION
+    assert.ok(buttonMatches[1].includes('btn-quit-menu'), 'Button 2 must be #btn-quit-menu');
+    assert.ok(buttonMatches[1].includes('QUIT MISSION'), 'Button 2 text must be QUIT MISSION');
+  });
+
+  test('GAME-026: Direct Quit and Cancel flow simulation', () => {
+    gm.startGame('QUIT_FLOW_TESTER');
+    gameState.update({ score: 950, currentLevel: 2 });
+    assert.strictEqual(gameState.state.status, 'PLAYING');
+
+    // Pause game
+    gm.pauseGame();
+    assert.strictEqual(gameState.state.isPaused, true);
+
+    // Quit to menu
+    gm.quitToMenu();
+    assert.strictEqual(gameState.state.status, 'MENU');
+    assert.strictEqual(gameState.state.score, 0);
+    assert.strictEqual(gameState.state.isPaused, false);
+    assert.strictEqual(gm.timer.isRunning, false);
+  });
 });

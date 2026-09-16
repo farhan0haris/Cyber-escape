@@ -909,6 +909,7 @@ export class Level1 {
         // Toggle expansion
         const toggleBtn = e.target.closest('.l1-card-toggle-btn');
         if (toggleBtn) {
+          audio.playClick();
           const cardId = toggleBtn.dataset.toggle;
           if (this.expandedCards.has(cardId)) {
             this.expandedCards.delete(cardId);
@@ -922,6 +923,7 @@ export class Level1 {
         // Checkbox toggle
         const checkbox = e.target.closest('.l1-card-checkbox');
         if (checkbox) {
+          audio.playSelect();
           const id = checkbox.dataset.id;
           if (checkbox.checked) {
             this.selectedEvidenceIds.add(id);

@@ -177,6 +177,75 @@ export class AudioManager {
       osc.stop(now + 0.3);
     } catch (e) {}
   }
+
+  playSelect() {
+    if (!this._isEnabled || !this._ctx) return;
+    try {
+      const now = this._ctx.currentTime;
+      const osc = this._ctx.createOscillator();
+      const gain = this._ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1200, now);
+      osc.frequency.exponentialRampToValueAtTime(1600, now + 0.04);
+
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+
+      osc.connect(gain);
+      gain.connect(this._ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.04);
+    } catch (e) {}
+  }
+
+  playHandoff() {
+    if (!this._isEnabled || !this._ctx) return;
+    try {
+      const now = this._ctx.currentTime;
+      const osc = this._ctx.createOscillator();
+      const gain = this._ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(440, now);
+      osc.frequency.exponentialRampToValueAtTime(880, now + 0.12);
+      osc.frequency.exponentialRampToValueAtTime(660, now + 0.24);
+
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+
+      osc.connect(gain);
+      gain.connect(this._ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.25);
+    } catch (e) {}
+  }
+
+  playFinale() {
+    if (!this._isEnabled || !this._ctx) return;
+    try {
+      const now = this._ctx.currentTime;
+      const freqs = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+      freqs.forEach((freq, idx) => {
+        const osc = this._ctx.createOscillator();
+        const gain = this._ctx.createGain();
+
+        osc.type = idx % 2 === 0 ? 'triangle' : 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+
+        gain.gain.setValueAtTime(0.15 / (idx + 1), now + idx * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+
+        osc.connect(gain);
+        gain.connect(this._ctx.destination);
+
+        osc.start(now + idx * 0.08);
+        osc.stop(now + 0.55);
+      });
+    } catch (e) {}
+  }
 }
 
 export const audio = new AudioManager();

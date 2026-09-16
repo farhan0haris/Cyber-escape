@@ -36,9 +36,10 @@
 }
 
 .l3-sector-title {
-  font-size: 1.15rem;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.02em;
   color: #00ffcc;
   margin: 0;
   text-transform: uppercase;

@@ -1,9 +1,13 @@
-/**
- * UI Manager
- * Handles DOM views, screens, modals, HUD updates, and notifications
- */
-
 import { getLevelMetadata } from '../core/levelMetadata.js';
+import { storage } from '../systems/StorageManager.js';
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
 
 export class UIManager {
   constructor() {
@@ -79,12 +83,18 @@ export class UIManager {
    */
   showModal(modalId) {
     if (typeof document === 'undefined') return;
+    if (modalId === 'modal-leaderboard') {
+      this.renderLeaderboard();
+    }
     const modal = document.getElementById(modalId);
     if (modal) {
+      if (document.activeElement && document.activeElement !== document.body) {
+        this._lastActiveTrigger = document.activeElement;
+      }
       modal.classList.add('active');
-      // Accessible focus on first interactive element
-      const firstInput = modal.querySelector('input, button:not([data-close-modal])');
-      if (firstInput) firstInput.focus();
+      // Accessible focus on first interactive element, fallback to close/action button
+      const focusTarget = modal.querySelector('input, button:not([data-close-modal]), button[data-close-modal], [tabindex="0"]');
+      if (focusTarget) focusTarget.focus();
     }
   }
 
@@ -97,6 +107,10 @@ export class UIManager {
     const modal = document.getElementById(modalId);
     if (modal) {
       modal.classList.remove('active');
+      if (this._lastActiveTrigger && typeof this._lastActiveTrigger.focus === 'function') {
+        this._lastActiveTrigger.focus();
+        this._lastActiveTrigger = null;
+      }
     }
   }
 
@@ -108,6 +122,10 @@ export class UIManager {
     document.querySelectorAll('.modal-overlay.active').forEach((modal) => {
       modal.classList.remove('active');
     });
+    if (this._lastActiveTrigger && typeof this._lastActiveTrigger.focus === 'function') {
+      this._lastActiveTrigger.focus();
+      this._lastActiveTrigger = null;
+    }
   }
 
   /**
@@ -337,6 +355,118 @@ export class UIManager {
         clearInterval(this._commandLogInterval);
       }
     }, 5000);
+  }
+
+  /**
+   * Render dynamic leaderboard scores or empty state
+   */
+  renderLeaderboard() {
+    if (typeof document === 'undefined') return;
+    const container = document.getElementById('leaderboard-content');
+    if (!container) return;
+
+    let rawBoard = [];
+    try {
+      rawBoard = storage.get('leaderboard', []);
+    } catch (err) {
+      console.warn('[UIManager] Failed to load leaderboard from storage:', err);
+      rawBoard = [];
+    }
+
+    const entries = Array.isArray(rawBoard) ? rawBoard : [];
+    const validEntries = entries
+      .filter((e) => e && (typeof e.score === 'number' || !isNaN(parseInt(e.score, 10))))
+      .sort((a, b) => {
+        const scoreA = Number(a.score) || 0;
+        const scoreB = Number(b.score) || 0;
+        if (scoreB !== scoreA) return scoreB - scoreA;
+        const timeA = a.time != null ? Number(a.time) : (a.totalTime != null ? Number(a.totalTime) : Infinity);
+        const timeB = b.time != null ? Number(b.time) : (b.totalTime != null ? Number(b.totalTime) : Infinity);
+        if (timeA !== timeB) return timeA - timeB;
+        const dateA = a.completedAt || a.date || a.timestamp || 0;
+        const dateB = b.completedAt || b.date || b.timestamp || 0;
+        return dateB - dateA;
+      })
+      .slice(0, 10);
+
+    if (validEntries.length === 0) {
+      container.innerHTML = `
+        <div class="leaderboard-empty-state">
+          <div class="empty-icon-shield" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <h3 class="empty-title font-mono text-cyan">NO VERIFIED RUNS</h3>
+          <p class="empty-desc">
+            Complete an unbroken 5-sector mission to establish a verified record in the security archives.
+          </p>
+        </div>
+      `;
+      return;
+    }
+
+    const rowsHtml = validEntries.map((entry, index) => {
+      const rank = index + 1;
+      const rankStr = String(rank).padStart(2, '0');
+      const rankClass = rank <= 3 ? `rank-${rank}` : 'rank-standard';
+      const rankTagClass = rank <= 3 ? `rank-tag-${rank}` : 'rank-tag-default';
+
+      const playerName = (entry.player || entry.playerName || entry.name || 'OPERATOR').slice(0, 20);
+      const scoreVal = (Number(entry.score) || 0).toLocaleString('en-US');
+
+      let timeStr = '--:--';
+      const timeSecs = entry.time != null ? entry.time : entry.totalTime;
+      if (typeof timeSecs === 'number' && !isNaN(timeSecs)) {
+        const mins = Math.floor(timeSecs / 60);
+        const secs = Math.floor(timeSecs % 60);
+        timeStr = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      }
+
+      let dateStr = '--';
+      const timestamp = entry.completedAt || entry.date || entry.timestamp;
+      if (timestamp) {
+        const d = new Date(timestamp);
+        if (!isNaN(d.getTime())) {
+          dateStr = d.toISOString().split('T')[0];
+        }
+      }
+
+      return `
+        <div class="leaderboard-row ${rankClass}" role="row">
+          <div class="col-rank" role="cell">
+            <span class="rank-tag font-mono ${rankTagClass}">#${rankStr}</span>
+          </div>
+          <div class="col-player" role="cell">
+            <span class="player-name font-mono">${escapeHtml(playerName)}</span>
+          </div>
+          <div class="col-score font-mono text-cyan" role="cell">
+            ${scoreVal}
+          </div>
+          <div class="col-time font-mono" role="cell">
+            ${timeStr}
+          </div>
+          <div class="col-date font-mono text-muted" role="cell">
+            ${dateStr}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    container.innerHTML = `
+      <div class="leaderboard-table font-mono" role="table" aria-label="Top escape records">
+        <div class="leaderboard-header-row" role="row">
+          <span class="col-rank" role="columnheader">RANK</span>
+          <span class="col-player" role="columnheader">OPERATOR</span>
+          <span class="col-score" role="columnheader">SCORE</span>
+          <span class="col-time" role="columnheader">TIME</span>
+          <span class="col-date" role="columnheader">DATE</span>
+        </div>
+        <div class="leaderboard-rows" role="rowgroup">
+          ${rowsHtml}
+        </div>
+      </div>
+    `;
   }
 }
 

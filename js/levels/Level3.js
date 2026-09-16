@@ -282,7 +282,7 @@ export class Level3 {
       }
     }
 
-    audio.playClick();
+    audio.playSelect();
     this.updateUI();
   }
 
@@ -308,7 +308,7 @@ export class Level3 {
       }
       this.showNotice(`Block [${this.getPinnedChip()?.blockLabel || chipId}] pinned as comparison reference.`, 'info');
     }
-    audio.playClick();
+    audio.playSelect();
     this.updateUI();
   }
 
