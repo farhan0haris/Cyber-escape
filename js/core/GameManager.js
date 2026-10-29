@@ -292,7 +292,7 @@ export class GameManager {
       isPaused: false,
       isGameOver: false,
       isCompleted: false,
-      levelTimeRemaining: 75,
+      levelTimeRemaining: 150,
       score: 0
     });
     ui.hideAllModals();

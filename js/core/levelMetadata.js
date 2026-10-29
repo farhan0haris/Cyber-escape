@@ -11,7 +11,7 @@ export const LEVEL_METADATA = Object.freeze({
     type: 'LOGIC HASH',
     objective: 'SECTOR 01: FIREWALL GATE // AUTHENTICATE PASSWORD HASH',
     standbyObjective: 'SECTOR 01: AWAITING SECURITY PUZZLE INITIALIZATION',
-    durationSeconds: 75,
+    durationSeconds: 150,
     baseScore: 1000,
     timeBonusMultiplier: 10,
     description: 'Bypass firewall gateway by deducing the root password hash from forensic clues.'
@@ -35,7 +35,7 @@ export const LEVEL_METADATA = Object.freeze({
     type: 'DECOY FILTER',
     objective: 'SECTOR 03: MEMORY DUMP // ISOLATE AUTHENTIC DECRYPTION KEY',
     standbyObjective: 'SECTOR 03: AWAITING MEMORY CLUSTER INSPECTION',
-    durationSeconds: 75,
+    durationSeconds: 150,
     baseScore: 1200,
     timeBonusMultiplier: 15,
     description: 'Inspect 12 cryptographic memory chips and isolate the authentic AES decryption key.'
@@ -59,7 +59,7 @@ export const LEVEL_METADATA = Object.freeze({
     type: 'MASTER OVERRIDE',
     objective: 'SECTOR 05: ROOT KERNEL // EXECUTE MASTER OVERRIDE',
     standbyObjective: 'SECTOR 05: AWAITING OVERRIDE PROTOCOL SEQUENCE',
-    durationSeconds: 90,
+    durationSeconds: 180,
     baseScore: 2500,
     timeBonusMultiplier: 25,
     description: 'Recall sequence echoes, synchronize carrier frequencies, and trigger the emergency root disconnect.'

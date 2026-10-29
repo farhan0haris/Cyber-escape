@@ -63,14 +63,14 @@ describe('Phase 3 Core Engine & Lifecycle Tests', () => {
     const metaL1 = getLevelMetadata(1);
     assert.strictEqual(metaL1.number, 1);
     assert.strictEqual(metaL1.name, 'FIREWALL GATE');
-    assert.strictEqual(metaL1.durationSeconds, 75);
+    assert.strictEqual(metaL1.durationSeconds, 150);
 
     const metaL5 = getLevelMetadata(5);
     assert.strictEqual(metaL5.name, 'ROOT KERNEL');
-    assert.strictEqual(metaL5.durationSeconds, 90);
+    assert.strictEqual(metaL5.durationSeconds, 180);
 
     gm.startGame('OPERATOR');
-    assert.strictEqual(gameState.state.levelTimeRemaining, 75);
+    assert.strictEqual(gameState.state.levelTimeRemaining, 150);
   });
 
   test('GAME-004 & GAME-005: Pause freezes timer and Resume restarts timer', async () => {
@@ -104,7 +104,7 @@ describe('Phase 3 Core Engine & Lifecycle Tests', () => {
     assert.strictEqual(gameState.state.lives, 2, 'Life must decrement by 1');
     assert.strictEqual(gameState.state.score, 850, 'Score must be preserved');
     assert.strictEqual(gameState.state.currentLevel, 1, 'Level must stay on same sector');
-    assert.strictEqual(gameState.state.levelTimeRemaining, 75, 'Timer must reset to full level duration');
+    assert.strictEqual(gameState.state.levelTimeRemaining, 150, 'Timer must reset to full level duration');
   });
 
   test('GAME-008, GAME-009, GAME-010: Restart resets score, lives, and level', () => {

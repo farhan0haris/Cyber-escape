@@ -143,11 +143,11 @@ Players and casual learners need an engaging, accessible, zero-friction web expe
   * Warning pulse (amber) when remaining time $\le 20$ seconds.
   * Critical urgency pulse (red) when remaining time $\le 10$ seconds.
 * Configured Level Durations:
-  * Level 1: 75 seconds
+  * Level 1: 150 seconds
   * Level 2: 90 seconds
-  * Level 3: 60 seconds
+  * Level 3: 150 seconds
   * Level 4: 60 seconds
-  * Level 5: 90 seconds
+  * Level 5: 180 seconds
 
 ---
 

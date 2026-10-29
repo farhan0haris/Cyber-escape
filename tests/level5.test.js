@@ -29,9 +29,9 @@ describe('Level 5: System Override (Root Kernel) Tests (LEVEL5-001 -> LEVEL5-046
     assert.ok(level.scenario.id, 'Scenario must have a valid ID');
   });
 
-  it('LEVEL5-002: Level 5 metadata specifies exactly 90 seconds duration and 2500 base score', () => {
+  it('LEVEL5-002: Level 5 metadata specifies exactly 180 seconds duration and 2500 base score', () => {
     const meta = getLevelMetadata(5);
-    assert.strictEqual(meta.durationSeconds, 90, 'Duration must be 90 seconds');
+    assert.strictEqual(meta.durationSeconds, 180, 'Duration must be 180 seconds');
     assert.strictEqual(meta.baseScore, 2500, 'Base score must be 2500');
     assert.strictEqual(meta.timeBonusMultiplier, 25, 'Time multiplier must be 25');
   });

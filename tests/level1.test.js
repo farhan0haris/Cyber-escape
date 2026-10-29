@@ -254,7 +254,7 @@ describe('Level 1: Multi-Step Evidence Chain & Forensic Deduction Tests (LEVEL1-
 
     assert.strictEqual(gameState.state.lives, 2);
     assert.strictEqual(gameState.state.currentLevel, 1);
-    assert.strictEqual(gameState.state.levelTimeRemaining, 75);
+    assert.strictEqual(gameState.state.levelTimeRemaining, 150);
     assert.strictEqual(gm.timer.isRunning, true);
   });
 

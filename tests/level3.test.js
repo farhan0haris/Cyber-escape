@@ -358,20 +358,20 @@ describe('Level 3: Memory Dump & Forensics Tests (LEVEL3-001 -> LEVEL3-060)', ()
     assert.equal(newInst.triageMarks.size, 0, 'Triage marks reset on retry');
   });
 
-  test('LEVEL3-058: Level 3 starts with exactly 75 seconds countdown', () => {
+  test('LEVEL3-058: Level 3 starts with exactly 150 seconds countdown', () => {
     const meta = getLevelMetadata(3);
-    assert.equal(meta.durationSeconds, 75, 'Level 3 metadata duration must be 75 seconds');
+    assert.equal(meta.durationSeconds, 150, 'Level 3 metadata duration must be 150 seconds');
 
     gm.startDevLevel(3);
-    assert.equal(gameState.state.levelTimeRemaining, 75, 'Initial countdown must be 75s');
+    assert.equal(gameState.state.levelTimeRemaining, 150, 'Initial countdown must be 150s');
   });
 
-  test('LEVEL3-059: Level 3 retry resets timer to exactly 75 seconds', () => {
+  test('LEVEL3-059: Level 3 retry resets timer to exactly 150 seconds', () => {
     gm.startDevLevel(3);
     gameState.update({ levelTimeRemaining: 20 });
 
     gm.retryCurrentLevel();
-    assert.equal(gameState.state.levelTimeRemaining, 75, 'Retry must restore timer to 75 seconds');
+    assert.equal(gameState.state.levelTimeRemaining, 150, 'Retry must restore timer to 150 seconds');
   });
 
   test('LEVEL3-060: Different scenarios use meaningfully different reasoning emphasis', () => {

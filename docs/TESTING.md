@@ -98,7 +98,7 @@ The following automated and manual tests validate Level 1 forensic investigation
 | **LEVEL1-009** | Timer | Timer stops on level completion | Countdown timer halted immediately upon successful authorization | **PASS** |
 | **LEVEL1-010** | Integration | Score reporting to GameManager | Bonus score `Base + (Time * 10) - Penalties` credited to global state | **PASS** |
 | **LEVEL1-011** | Failure Flow | Exhausted attempts triggers life loss | 3 failed attempts locks input and triggers `onLoseLife` retry | **PASS** |
-| **LEVEL1-012** | Lifecycle | Level retry creates clean instance | Retry resets attempt counter to 0 and re-arms timer to full 75s | **PASS** |
+| **LEVEL1-012** | Lifecycle | Level retry creates clean instance | Retry resets attempt counter to 0 and re-arms timer to full 150s | **PASS** |
 | **LEVEL1-013** | Pause | Pause freezes interaction | Inputs and buttons disabled during active game pause | **PASS** |
 | **LEVEL1-014** | Pause | Resume restores interaction | Controls re-enabled upon resuming from pause overlay | **PASS** |
 | **LEVEL1-015** | Teardown | Cleanup removes handlers | All DOM nodes and timeouts cleaned without memory leaks | **PASS** |
@@ -203,7 +203,7 @@ The following automated and manual tests validate Level 2 canvas grid rendering,
 | **LEVEL2-057** | Retry | Same maze & seed on retry | Retrying after life loss preserves exact same maze variant and seed | **PASS** |
 | **LEVEL2-058** | Timer | Timeout retry resets to 60s | Timing out deducts 1 life and resets timer to exactly 60s | **PASS** |
 | **LEVEL2-059** | Dev Control | Dev launch starts at 60s | Direct launch of Level 2 starts countdown at 60s | **PASS** |
-| **LEVEL2-060** | Engine | Other level timers unchanged | Levels 1 (75s), 3 (60s), 4 (60s), 5 (90s) maintain documented limits | **PASS** |
+| **LEVEL2-060** | Engine | Other level timers unchanged | Levels 1 (150s), 3 (150s), 4 (60s), 5 (180s) maintain documented limits | **PASS** |
 
 ---
 

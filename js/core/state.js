@@ -9,7 +9,7 @@ export const INITIAL_STATE = Object.freeze({
   currentLevel: 1,
   score: 0,
   lives: 3,
-  levelTimeRemaining: 75,
+  levelTimeRemaining: 150,
   totalTimeElapsed: 0,
   completedLevels: [],
   status: 'MENU', // 'MENU' | 'PLAYER_SETUP' | 'PLAYING' | 'PAUSED' | 'GAME_OVER' | 'COMPLETED'

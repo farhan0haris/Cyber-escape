@@ -103,10 +103,10 @@ $$\text{Total Score} = \sum_{i=1}^5 \text{LevelScore}_i + \text{EndGameBonus}$$
 
 ### LEVEL 1 — PASSWORD BREACH
 * **Cyber Metaphor:** Forensic reconstruction and cross-referencing of an authorization override key at the primary firewall gate.
-* **Duration:** 75 Seconds.
+* **Duration:** 150 Seconds.
 * **Base Score:** 1,000 pts (+10 pts per remaining second).
 * **Penalty:** -150 pts per incorrect authorization attempt; -100 pts for Hint 1; -150 pts for Hint 2.
-* **Max Attempts Allowed:** 3 attempts. The 3rd failed attempt triggers an automatic security lockout (-1 life; if lives > 0, level resets with full 75s timer).
+* **Max Attempts Allowed:** 3 attempts. The 3rd failed attempt triggers an automatic security lockout (-1 life; if lives > 0, level resets with full 150s timer).
 
 #### Gameplay Mechanics & Forensic Deduction Architecture:
 1. **Deductive Multi-Step Structure:** No authorization segment (`[HASH]`, `[PORT]`, `[YEAR]`) is ever directly displayed in the raw evidence. The player must deduce each segment through cross-referencing:
@@ -195,7 +195,7 @@ $$\text{Total Score} = \sum_{i=1}^5 \text{LevelScore}_i + \text{EndGameBonus}$$
 
 ### LEVEL 3 — HIDDEN KEY / MEMORY DUMP FORENSICS
 * **Cyber Metaphor:** Analyzing a volatile memory dump to isolate the authentic decryption key among 11 corrupted, spoofed, or stale decoys.
-* **Duration:** 75 Seconds.
+* **Duration:** 150 Seconds.
 * **Base Score:** 1,200 pts (+15 pts per remaining second).
 * **Penalty:** -100 pts and -5 seconds deduction for each false decoy verification.
 * **Lockout:** 3 failed verifications trigger a security lockout and life loss.
@@ -253,9 +253,9 @@ $$\text{Total Score} = \sum_{i=1}^5 \text{LevelScore}_i + \text{EndGameBonus}$$
 
 ### LEVEL 5 — SYSTEM OVERRIDE / ROOT KERNEL
 * **Cyber Metaphor:** Executing the master override sequence on the collapsing root kernel terminal to breach containment and escape the sandbox.
-* **Duration:** 90 Seconds.
+* **Duration:** 180 Seconds.
 * **Base Score:** 2,500 pts (+25 pts per remaining second) + (Surviving Lives × 500 pts).
-* **Max Error Tolerance:** 3 cumulative major stage failures before security lockdown (-1 life, resets override to Stage 1 with full 90s timer).
+* **Max Error Tolerance:** 3 cumulative major stage failures before security lockdown (-1 life, resets override to Stage 1 with full 180s timer).
 
 #### Gameplay Mechanics & Connected 3-Stage Climax:
 1. **Stage 1 (Access Pathway Recall):**

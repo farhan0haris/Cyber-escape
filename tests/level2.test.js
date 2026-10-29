@@ -653,11 +653,11 @@ describe('Level 2: Digital Maze & Navigation Tests (LEVEL2-001 -> LEVEL2-060)', 
   });
 
   test('LEVEL2-060: Levels 1, 3, 4, and 5 retain their existing documented timers', () => {
-    assert.equal(getLevelMetadata(1).durationSeconds, 75, 'Level 1 must remain 75s');
+    assert.equal(getLevelMetadata(1).durationSeconds, 150, 'Level 1 must be 150s');
     assert.equal(getLevelMetadata(2).durationSeconds, 60, 'Level 2 must be 60s');
-    assert.equal(getLevelMetadata(3).durationSeconds, 75, 'Level 3 must be 75s');
+    assert.equal(getLevelMetadata(3).durationSeconds, 150, 'Level 3 must be 150s');
     assert.equal(getLevelMetadata(4).durationSeconds, 60, 'Level 4 must remain 60s');
-    assert.equal(getLevelMetadata(5).durationSeconds, 90, 'Level 5 must remain 90s');
+    assert.equal(getLevelMetadata(5).durationSeconds, 180, 'Level 5 must be 180s');
   });
 });
 
